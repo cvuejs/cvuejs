@@ -1,0 +1,10 @@
+import { CoreAdapter, CoreOutput } from '../../dtos/core.dto';
+
+export interface <%= classify(name) %>Adapter extends CoreAdapter {
+  on?: {};
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface <%= classify(name) %>Output extends CoreOutput {}
+
+export const <%= underscore(name).toLocaleUpperCase() %>_DEFAULT: <%= classify(name) %>Adapter = {};

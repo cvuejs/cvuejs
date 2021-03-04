@@ -1,0 +1,40 @@
+<template>
+  <el-<%= dasherize(name) %>
+    class="<%= dasherize(prefix) %>-<%= dasherize(name) %>"
+    :ref="$options.name"
+    v-model="model"
+    v-bind="$$bind"
+    v-on="$$on"
+  ></el-<%= dasherize(name) %>>
+</template>
+
+<script lang="ts">
+import { Component, Prop, Mixins } from 'vue-property-decorator';
+import FormFactory from '../../factory/form.factory';
+import { FormBase } from '../../dtos/core.dto';
+import { ComponentTypes } from '../../dtos/factories.dto';
+import { <%= classify(name) %>Output, <%= classify(name) %>Adapter, <%= underscore(name).toLocaleUpperCase() %>_DEFAULT } from './adapter';
+import _ from 'lodash';
+
+@Component({ name: '<%= classify(prefix) %><%= classify(name) %>' })
+export default class <%= classify(name) %> extends Mixins(FormFactory) implements FormBase {
+  @Prop({ type: Object, default: () => ({}) }) c!: <%= classify(name) %>Adapter;
+  @Prop({ type: String }) n?: string;
+
+  get Config(): <%= classify(name) %>Adapter {
+    return _(this.c)
+      .defaultsDeepSafe(<%= underscore(name).toLocaleUpperCase() %>_DEFAULT)
+      .value();
+  }
+  get Output(): <%= classify(name) %>Output {
+    return {
+      this: this.c
+    };
+  }
+
+  ComponentType = ComponentTypes.<%= classify(name) %>;
+  OwnAdapterKeys = [];
+}
+</script>
+
+<style lang="scss"></style>

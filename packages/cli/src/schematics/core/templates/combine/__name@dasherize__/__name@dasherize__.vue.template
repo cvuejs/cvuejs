@@ -1,0 +1,33 @@
+<template>
+  <div class="<%= dasherize(prefix) %>-<%= dasherize(name) %>" :ref="$options.name"></div>
+</template>
+
+<script lang="ts">
+import { Component, Prop, Mixins } from 'vue-property-decorator';
+import CombineFactory from '../../factory/combine.factory';
+import { CoreBase } from '../../dtos/core.dto';
+import { ComponentTypes } from '../../dtos/factories.dto';
+import { <%= classify(name) %>Output, <%= classify(name) %>Adapter, <%= underscore(name).toLocaleUpperCase() %>_DEFAULT } from './adapter';
+import _ from 'lodash';
+
+@Component({ name: '<%= classify(prefix) %><%= classify(name) %>' })
+export default class <%= classify(name) %> extends Mixins(CombineFactory) implements CoreBase {
+  @Prop({ type: Object, default: () => ({}) }) c!: <%= classify(name) %>Adapter;
+  @Prop({ type: String }) n?: string;
+
+  get Config(): <%= classify(name) %>Adapter {
+    return _(this.c)
+      .defaultsDeepSafe(<%= underscore(name).toLocaleUpperCase() %>_DEFAULT)
+      .value();
+  }
+  get Output(): <%= classify(name) %>Output {
+    return {
+      this: this.c
+    };
+  }
+
+  ComponentType = ComponentTypes.<%= classify(name) %>;
+}
+</script>
+
+<style lang="scss"></style>

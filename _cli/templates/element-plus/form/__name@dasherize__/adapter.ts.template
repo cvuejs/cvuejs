@@ -1,0 +1,14 @@
+import { El<%= classify(name) %> } from 'element-ui/types/<%= dasherize(name) %>';
+import { CoreAdapter, CoreOutput } from '../../dtos/core.dto';
+
+type OmitKeys = '';
+type El<%= classify(name) %>Adapter = Omit<Partial<El<%= classify(name) %>>, OmitKeys>;
+
+export interface <%= classify(name) %>Adapter extends El<%= classify(name) %>Adapter, CoreAdapter<El<%= classify(name) %>> {
+  on?: {};
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface <%= classify(name) %>Output extends CoreOutput {}
+
+export const <%= underscore(name).toLocaleUpperCase() %>_DEFAULT: <%= classify(name) %>Adapter = {};

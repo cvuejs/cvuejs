@@ -1,0 +1,24 @@
+{
+  "name": "@cvue/element-plus",
+  "version": "0.0.6",
+  "description": "A blank core",
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "keywords": [
+    "core"
+  ],
+  "main": "index.ts",
+  "types": "index.d.ts",
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.19"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.149",
+    "@types/qs": "^6.9.0",
+    "element-plus": "^1.0.2",
+    "typescript": "^4.2.2"
+  }
+}
