@@ -6,14 +6,11 @@ import {
   chain,
   mergeWith,
   MergeStrategy,
-  apply,
-  noop,
+  apply
 } from '@angular-devkit/schematics'
 import { normalize, join } from 'path'
 import { strings } from '@angular-devkit/core'
 import { CliConfig } from '../../config.dto'
-import { LoadConfig, LoadFile } from '../../utils/load-config'
-import { DEFAULT_VIEW_CONFIG } from '../../config'
 
 export interface CustomOption extends CliConfig {
   name: string
@@ -34,13 +31,11 @@ export function custom(options: CustomOption): Rule {
     const templateSource = apply(url(tempUrl), [
       applyTemplates({
         ...strings,
-        ...options,
+        ...options
       }),
-      move(movePath),
+      move(movePath)
     ])
     console.log(tempUrl, movePath)
-
-    // const chainFun = options.handlerPath ? LoadFile(options.handlerPath) : noop;
 
     return chain([mergeWith(templateSource, MergeStrategy.Overwrite)])
   }

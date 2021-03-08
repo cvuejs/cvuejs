@@ -9,7 +9,7 @@ export function LoadFile(filePath: string) {
     throw new Error(`${colors.red('ERROR')} ${filePath}文件不存在！`)
 
   try {
-    const config = require(filePath).default as CliConfig
+    const config = require(filePath).default
 
     if (!config || typeof config !== 'object') {
       throw new Error(
@@ -24,7 +24,7 @@ export function LoadFile(filePath: string) {
   }
 }
 
-export function LoadConfig(): CliConfig  {
+export function LoadConfig(): CliConfig {
   const configTSPath = path.resolve(process.cwd(), CONFIG_TS_PATH)
   const configJSPath = path.resolve(process.cwd(), CONFIG_JS_PATH)
 

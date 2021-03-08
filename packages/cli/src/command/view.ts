@@ -1,17 +1,17 @@
 import { main } from '../utils/schematics-cli'
 import { createConsoleLogger } from '@angular-devkit/core/node'
 import { CliConfigItem, GenerateItem } from '../config.dto'
-import { LoadConfig } from '../utils/load-config'
 import { colors } from '../utils/terminal'
-
-const CONFIG = LoadConfig()
+import { defaultsDeep } from 'lodash'
+import { DEFAULT_VIEW_CONFIG } from '../config'
 
 interface ViewDirCliItem extends GenerateItem {
   parentPath?: string
   child?: ViewDirCliItem[]
 }
 
-export async function generateView(config: CliConfigItem) {
+export async function generateView(originalConfig: CliConfigItem) {
+  const config = defaultsDeep(originalConfig, DEFAULT_VIEW_CONFIG)
   const dirs = config.generate
   const logger = createConsoleLogger(false)
 
@@ -34,7 +34,13 @@ async function callSchematics(
 ) {
   throwTypeError(dir, parentDir)
 
-  const { name, viewType = 'page', parentPath = '', templatePath, handlerPath } = dir
+  const {
+    name,
+    viewType = 'page',
+    parentPath = '',
+    templatePath,
+    handlerPath
+  } = dir
   const viewPath = config.root
 
   let args: string[] = []
@@ -66,7 +72,7 @@ async function callSchematics(
       args = [
         '@cvue/cli:dependent',
         `--name=${name}`,
-        `--hostPath=${viewPath}/${parentPath}`,
+        `--hostPath=${viewPath}/${parentPath}`
       ]
       templatePath && args.push(`--templatePath=${templatePath}`)
       handlerPath && args.push(`--handlerPath=${handlerPath}`)
@@ -97,7 +103,11 @@ async function callSchematics(
 }
 
 function throwTypeError(dir: ViewDirCliItem, parentDir?: ViewDirCliItem) {
-  if (dir.viewType === 'module' && parentDir && parentDir.viewType !== 'module') {
+  if (
+    dir.viewType === 'module' &&
+    parentDir &&
+    parentDir.viewType !== 'module'
+  ) {
     throw new Error(
       `${colors.red('ERROR')} module:${dir.name}只能在是module的child中！`
     )

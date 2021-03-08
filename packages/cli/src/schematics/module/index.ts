@@ -1,4 +1,3 @@
-import { DEFAULT_CONFIG } from '../../config';
 import {
   url,
   Rule,
@@ -9,83 +8,100 @@ import {
   MergeStrategy,
   apply,
   Tree
-} from '@angular-devkit/schematics';
-import { normalize, join, relative } from 'path';
-import { strings } from '@angular-devkit/core';
-import { readIntoSourceFile } from '../../utils/file';
-import { findNodes, insertImport, getTextIndentation } from '../../utils/ast-utils';
-import * as ts from 'typescript';
-import { InsertChange } from '../../utils/change';
-import { defaultsDeep } from 'lodash';
-import { CliConfig } from '../../config.dto';
-import { LoadConfig } from '../../utils/load-config';
+} from '@angular-devkit/schematics'
+import { normalize, join, relative } from 'path'
+import { strings } from '@angular-devkit/core'
+import { readIntoSourceFile } from '../../utils/file'
+import {
+  findNodes,
+  insertImport,
+  getTextIndentation
+} from '../../utils/ast-utils'
+import * as ts from 'typescript'
+import { InsertChange } from '../../utils/change'
+import { defaultsDeep } from 'lodash'
+import { CliConfigItem } from '../../config.dto'
+import { DEFAULT_VIEW_CONFIG } from '../../config'
 
-interface ModuleConfig extends CliConfig {
-  name: string;
-  modulePath: string;
+interface ModuleConfig extends CliConfigItem {
+  name: string
+  modulePath: string
 }
-
-const CONFIG = LoadConfig();
 
 function setViewRouter(options: Required<ModuleConfig>): Rule {
   return (host: Tree) => {
-    const classifyName = strings.classify(options.name);
+    const classifyName = strings.classify(options.name)
 
     const routerPath = options.modulePath
-      ? join(options.paths.view!, options.modulePath, '/index.route.ts')
-      : join(options.paths.router!, options.fileNames.router!);
-    const routerSource = readIntoSourceFile(host, routerPath);
-    const viewRouteName = `${classifyName}Routes`;
+      ? join(options.root, options.modulePath, '/index.route.ts')
+      : join(options.router)
+    const routerSource = readIntoSourceFile(host, routerPath)
+    const viewRouteName = `${classifyName}Routes`
     const viewRoutePath = options.modulePath
       ? join('./', options.modulePath, '/index.route')
-      : join(relative(options.paths.router!, options.paths.view!), options.name, '/index.route');
-    const change = insertImport(routerSource, routerPath, viewRouteName, viewRoutePath, true);
-    const routerRecorder = host.beginUpdate(routerPath);
+      : join(
+          relative(options.router, options.root),
+          options.name,
+          '/index.route'
+        )
+    const change = insertImport(
+      routerSource,
+      routerPath,
+      viewRouteName,
+      viewRoutePath,
+      true
+    )
+    const routerRecorder = host.beginUpdate(routerPath)
     if (change instanceof InsertChange) {
-      routerRecorder.insertLeft(change.pos, change.toAdd);
+      routerRecorder.insertLeft(change.pos, change.toAdd)
     }
 
     // 默认最后一个带有routes属性的对象为Router对象
     const arrayNodes = findNodes(routerSource, ts.SyntaxKind.PropertyAssignment)
       .reverse()
       .filter((node: ts.Node) => {
-        return node.getChildren().some((node) => node.getText() === 'routes');
-      });
+        return node.getChildren().some((node) => node.getText() === 'routes')
+      })
     if (arrayNodes && arrayNodes.length) {
-      const routerNode = arrayNodes[0];
+      const routerNode = arrayNodes[0]
       const routesArrayNode = routerNode
         .getChildren()
-        .find((node) => node.kind === ts.SyntaxKind.ArrayLiteralExpression);
+        .find((node) => node.kind === ts.SyntaxKind.ArrayLiteralExpression)
       if (routesArrayNode) {
         const indentation = getTextIndentation(
           (routesArrayNode as ts.ArrayLiteralExpression).elements
-            .find((node) => node.kind === ts.SyntaxKind.ObjectLiteralExpression)!
+            .find(
+              (node) => node.kind === ts.SyntaxKind.ObjectLiteralExpression
+            )!
             .getFullText()
-        );
+        )
         const routesChange = new InsertChange(
           routerPath,
           routesArrayNode.pos + 2,
           `${indentation}...${viewRouteName},`
-        );
-        routerRecorder.insertLeft(routesChange.pos, routesChange.toAdd);
+        )
+        routerRecorder.insertLeft(routesChange.pos, routesChange.toAdd)
       }
     }
 
-    host.commitUpdate(routerRecorder);
-    return host;
-  };
+    host.commitUpdate(routerRecorder)
+    return host
+  }
 }
 
 export function module(options: Required<ModuleConfig>): Rule {
   return () => {
     // 设置默认和用户配置
-    defaultsDeep(options, CONFIG, DEFAULT_CONFIG);
+    defaultsDeep(options, DEFAULT_VIEW_CONFIG)
 
-    const movePath = normalize(options.paths.view!);
+    const movePath = normalize(options.root)
     const templateSource = apply(url('./templates'), [
       applyTemplates({ ...strings, ...options }),
       move(movePath)
-    ]);
-    return chain([setViewRouter(options), mergeWith(templateSource, MergeStrategy.Overwrite)]);
-  };
+    ])
+    return chain([
+      setViewRouter(options),
+      mergeWith(templateSource, MergeStrategy.Overwrite)
+    ])
+  }
 }

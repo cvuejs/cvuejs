@@ -1,4 +1,4 @@
-export type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>;
+export type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>
 
 /**
  * 移除指定嵌套的类型
@@ -8,5 +8,5 @@ export type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>;
  * ```
  */
 export type OmitNested<T, K extends keyof T, P extends string> = {
-  [Q in keyof T]: Q extends K ? Omit<T[Q], P> : T[Q];
-};
+  [Q in keyof T]: Q extends K ? Omit<T[Q], P> : T[Q]
+}

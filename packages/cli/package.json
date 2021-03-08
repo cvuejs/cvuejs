@@ -1,6 +1,6 @@
 {
   "name": "@cvue/cli",
-  "version": "0.0.14",
+  "version": "0.0.0-PLACEHOLDER",
   "description": "A blank schematics",
   "scripts": {
     "build": "tsc -p tsconfig.json"
@@ -11,7 +11,7 @@
   "main": "index.ts",
   "types": "index.d.ts",
   "bin": {
-    "cvue": "./src/command/main"
+    "cvue": "src/command/main"
   },
   "author": "",
   "license": "MIT",

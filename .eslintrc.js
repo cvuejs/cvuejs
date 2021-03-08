@@ -19,7 +19,8 @@ module.exports = {
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': ['error', { functions: false }],
     '@typescript-eslint/no-explicit-any': 'off',
-    'prettier/prettier': 'off'
+    'prettier/prettier': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off'
   },
   overrides: [
     {

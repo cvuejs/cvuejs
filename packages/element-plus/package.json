@@ -1,6 +1,6 @@
 {
-  "name": "@cvue/element-plus",
-  "version": "0.0.6",
+  "name": "@cvue/element",
+  "version": "0.0.0-PLACEHOLDER",
   "description": "A blank core",
   "scripts": {
     "build": "tsc -p tsconfig.json"
@@ -10,9 +10,11 @@
   ],
   "main": "index.ts",
   "types": "index.d.ts",
-  "author": "",
+  "author": "xiaosimk",
   "license": "MIT",
   "dependencies": {
+    "@cvue/http": "PEER-0.0.0-PLACEHOLDER",
+    "vue": "^3.0.0",
     "lodash": "^4.17.19"
   },
   "devDependencies": {

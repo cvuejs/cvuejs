@@ -9,6 +9,30 @@ const Config: CliConfig = [
         name: 'button'
       }
     ]
+  }, {
+    type: 'view',
+    generate: [
+      {
+        name: 'river',
+        viewType: 'module',
+        child: [
+          {
+            name: 'input',
+            viewType: 'page',
+            child: [
+              {
+                viewType: 'component',
+                name: 'text'
+              }
+            ]
+          },
+          {
+            name: 'draw',
+            viewType: 'page'
+          }
+        ]
+      }
+    ]
   }
 ]
 

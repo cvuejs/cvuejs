@@ -1,5 +1,5 @@
-import * as ts from 'typescript';
-import { Change, InsertChange, NoopChange } from './change';
+import * as ts from 'typescript'
+import { Change, InsertChange, NoopChange } from './change'
 
 /**
  * Find all nodes from the AST in the subtree of node of SyntaxKind kind.
@@ -16,30 +16,30 @@ export function findNodes(
   recursive = false
 ): ts.Node[] {
   if (!node || max == 0) {
-    return [];
+    return []
   }
 
-  const arr: ts.Node[] = [];
+  const arr: ts.Node[] = []
   if (node.kind === kind) {
-    arr.push(node);
-    max--;
+    arr.push(node)
+    max--
   }
   if (max > 0 && (recursive || node.kind !== kind)) {
     for (const child of node.getChildren()) {
       findNodes(child, kind, max).forEach((node) => {
         if (max > 0) {
-          arr.push(node);
+          arr.push(node)
         }
-        max--;
-      });
+        max--
+      })
 
       if (max <= 0) {
-        break;
+        break
       }
     }
   }
 
-  return arr;
+  return arr
 }
 
 /**
@@ -58,39 +58,45 @@ export function insertImport(
   fileName: string,
   isDefault = false
 ): Change {
-  const rootNode = source;
-  const allImports = findNodes(rootNode, ts.SyntaxKind.ImportDeclaration).filter(
-    (node) => !node.decorators
-  ); // 防止scss中的@import被错误的识别
+  const rootNode = source
+  const allImports = findNodes(
+    rootNode,
+    ts.SyntaxKind.ImportDeclaration
+  ).filter((node) => !node.decorators) // 防止scss中的@import被错误的识别
   // 获取当前import语句，判断是否有和当前fileName相同的import
   const relevantImports = allImports.filter((node) => {
     // StringLiteral在这里就是fileName（from后面的值）
     const importFiles = node
       .getChildren()
       .filter((child) => child.kind === ts.SyntaxKind.StringLiteral)
-      .map((n) => (n as ts.StringLiteral).text);
-    return importFiles.filter((file) => file === fileName).length === 1;
-  });
+      .map((n) => (n as ts.StringLiteral).text)
+    return importFiles.filter((file) => file === fileName).length === 1
+  })
 
   if (relevantImports.length > 0) {
-    return new NoopChange();
+    return new NoopChange()
   }
 
   const useStrict = findNodes(rootNode, ts.SyntaxKind.StringLiteral).filter(
     (n: ts.Node) => (n as ts.StringLiteral).text === 'use strict'
-  );
-  let fallbackPos = 0;
+  )
+  let fallbackPos = 0
   if (useStrict.length > 0) {
-    fallbackPos = useStrict[0].end;
+    fallbackPos = useStrict[0].end
   }
-  const open = isDefault ? '' : '{ ';
-  const close = isDefault ? '' : ' }';
-  const insertAtBeginning = allImports.length === 0 && useStrict.length === 0;
-  const separator = insertAtBeginning ? '' : ';\n';
+  const open = isDefault ? '' : '{ '
+  const close = isDefault ? '' : ' }'
+  const insertAtBeginning = allImports.length === 0 && useStrict.length === 0
+  const separator = insertAtBeginning ? '' : ';\n'
   const toInsert =
     `${separator}import ${open}${symbolName}${close}` +
-    ` from '${fileName}'${insertAtBeginning ? ';\n' : ''}`;
-  return insertAfterLastOccurrence(allImports, toInsert, fileToEdit, fallbackPos);
+    ` from '${fileName}'${insertAtBeginning ? ';\n' : ''}`
+  return insertAfterLastOccurrence(
+    allImports,
+    toInsert,
+    fileToEdit,
+    fallbackPos
+  )
 }
 
 /**
@@ -113,23 +119,27 @@ export function insertAfterLastOccurrence(
   fallbackPos: number,
   syntaxKind?: ts.SyntaxKind
 ): Change {
-  let lastItem: ts.Node | undefined;
+  let lastItem: ts.Node | undefined
   for (const node of nodes) {
     if (!lastItem || lastItem.getStart() < node.getStart()) {
-      lastItem = node;
+      lastItem = node
     }
   }
   if (syntaxKind && lastItem) {
     lastItem = findNodes(lastItem, syntaxKind)
       .sort(nodesByPosition)
-      .pop();
+      .pop()
   }
   if (!lastItem && fallbackPos == undefined) {
-    throw new Error(`tried to insert ${toInsert} as first occurence with no fallback position`);
+    throw new Error(
+      `tried to insert ${toInsert} as first occurence with no fallback position`
+    )
   }
-  const lastItemPosition: number = lastItem ? lastItem.getEnd() - 1 : fallbackPos;
+  const lastItemPosition: number = lastItem
+    ? lastItem.getEnd() - 1
+    : fallbackPos
 
-  return new InsertChange(file, lastItemPosition, toInsert);
+  return new InsertChange(file, lastItemPosition, toInsert)
 }
 
 /**
@@ -137,7 +147,7 @@ export function insertAfterLastOccurrence(
  * @return function to sort nodes in increasing order of position in sourceFile
  */
 function nodesByPosition(first: ts.Node, second: ts.Node): number {
-  return first.getStart() - second.getStart();
+  return first.getStart() - second.getStart()
 }
 
 /**
@@ -147,9 +157,9 @@ function nodesByPosition(first: ts.Node, second: ts.Node): number {
  */
 export function getTextIndentation(text: string) {
   if (text.match(/^\r?\n/)) {
-    return text.match(/^\r?\n(\r?)\s*/)![0];
+    return text.match(/^\r?\n(\r?)\s*/)![0]
   } else {
-    return ` `; // 不存在换行缩进时提供一个空格
+    return ` ` // 不存在换行缩进时提供一个空格
   }
 }
 
@@ -169,12 +179,13 @@ export function getObjectField(
       // Filter out every fields that's not "objectField". Also handles string literals
       // (but not expressions).
       .filter((prop: ts.Node) => {
-        const name = (prop as ts.PropertyAssignment).name;
+        const name = (prop as ts.PropertyAssignment).name
         return (
-          (ts.isIdentifier(name) || ts.isStringLiteral(name)) && name.getText() === objectField
-        );
+          (ts.isIdentifier(name) || ts.isStringLiteral(name)) &&
+          name.getText() === objectField
+        )
       })
-  );
+  )
 }
 
 /**
@@ -183,21 +194,21 @@ export function getObjectField(
  * @returns {Observable<ts.Node>} An observable of all the nodes in the source.
  */
 export function getSourceNodes(sourceFile: ts.SourceFile): ts.Node[] {
-  const nodes: ts.Node[] = [sourceFile];
-  const result = [];
+  const nodes: ts.Node[] = [sourceFile]
+  const result = []
 
   while (nodes.length > 0) {
-    const node = nodes.shift();
+    const node = nodes.shift()
 
     if (node) {
-      result.push(node);
+      result.push(node)
       if (node.getChildCount(sourceFile) >= 0) {
-        nodes.unshift(...node.getChildren());
+        nodes.unshift(...node.getChildren())
       }
     }
   }
 
-  return result;
+  return result
 }
 
 /**
@@ -208,29 +219,31 @@ export function isImported(
   classifiedName: string,
   importPath: string
 ): boolean {
-  const allNodes = getSourceNodes(source);
+  const allNodes = getSourceNodes(source)
   const matchingNodes = allNodes
     .filter((node) => node.kind === ts.SyntaxKind.ImportDeclaration)
     .filter(
       (imp: ts.Node) =>
-        (imp as ts.ImportDeclaration).moduleSpecifier.kind === ts.SyntaxKind.StringLiteral
+        (imp as ts.ImportDeclaration).moduleSpecifier.kind ===
+        ts.SyntaxKind.StringLiteral
     )
     .filter((imp: ts.Node) => {
       return (
-        ((imp as ts.ImportDeclaration).moduleSpecifier as ts.StringLiteral).text === importPath
-      );
+        ((imp as ts.ImportDeclaration).moduleSpecifier as ts.StringLiteral)
+          .text === importPath
+      )
     })
     .filter((imp: ts.Node) => {
       if (!(imp as ts.ImportDeclaration).importClause) {
-        return false;
+        return false
       }
       const nodes = findNodes(
         (imp as ts.ImportDeclaration).importClause!,
         ts.SyntaxKind.ImportSpecifier
-      ).filter((n) => n.getText() === classifiedName);
+      ).filter((n) => n.getText() === classifiedName)
 
-      return nodes.length > 0;
-    });
+      return nodes.length > 0
+    })
 
-  return matchingNodes.length > 0;
+  return matchingNodes.length > 0
 }

@@ -17,5 +17,5 @@ const install = function(app: App) {
 
 export { install }
 export default {
-  install,
+  install
 }
