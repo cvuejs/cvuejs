@@ -1,23 +1,15 @@
 <template>
   <el-button class="c-button" :ref="$options.name" v-bind="attrs">{{
-    $options.name
+    attrs.text
   }}</el-button>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, SetupContext } from 'vue'
-import { ButtonAdapter } from './adapter'
+import { computed, defineComponent, PropType } from 'vue'
+import { ButtonAdapter, BUTTON_DEFAULT } from './adapter'
 import { ElButton } from 'element-plus'
 import { originalProps } from './props'
-
-function useGetBindAttrs(ctx: SetupContext<Record<string, any>>) {
-  const attrs = computed(() => {
-    return ctx.attrs
-  })
-  return {
-    attrs
-  }
-}
+import _ from 'lodash'
 
 export default defineComponent({
   name: 'CButton',
@@ -33,7 +25,11 @@ export default defineComponent({
     ...originalProps
   },
   setup(props, ctx) {
-    const { attrs } = useGetBindAttrs(ctx)
+    const attrs = computed(() => {
+    return _(props.c)
+      .defaultsDeepSafe(BUTTON_DEFAULT)
+      .value()
+  })
     console.log(ctx)
     return {
       attrs

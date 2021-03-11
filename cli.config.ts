@@ -6,7 +6,7 @@ const Config: CliConfig = [
     templatePath: '_cli/templates/element-plus/base',
     generate: [
       {
-        name: 'button'
+        name: 'pagination'
       }
     ]
   }, {

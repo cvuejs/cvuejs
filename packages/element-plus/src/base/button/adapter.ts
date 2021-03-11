@@ -1,7 +1,9 @@
-import { CommonAdapter } from '@cvue/shared/dtos/common'
+import { CommonAdapter } from '@cvue/shared/dtos/common' 
 import { ButtonProps } from './props'
 
-export interface ButtonAdapter extends Partial<ButtonProps>, CommonAdapter {}
+export interface ButtonAdapter extends Partial<ButtonProps>, CommonAdapter {
+  text?: string
+}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ButtonOutput {}

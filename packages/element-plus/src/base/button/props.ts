@@ -2,14 +2,20 @@ import { PropType } from 'vue'
 import { ComponentSize } from '../../utils/dtos'
 import { isValidComponentSize } from '../../utils/validators'
 
-type IButtonType = PropType<
-  'primary' | 'success' | 'warning' | 'danger' | 'info' | 'text' | 'default'
->
-type IButtonNativeType = PropType<'button' | 'submit' | 'reset'>
+type IButtonType =
+  | 'primary'
+  | 'success'
+  | 'warning'
+  | 'danger'
+  | 'info'
+  | 'text'
+  | 'default'
+
+type IButtonNativeType = 'button' | 'submit' | 'reset'
 
 export interface ButtonProps {
   type: IButtonType
-  size: PropType<ComponentSize>
+  size: ComponentSize
   icon: string
   nativeType: IButtonNativeType
   loading: boolean
@@ -22,7 +28,7 @@ export interface ButtonProps {
 
 export const originalProps = {
   type: {
-    type: String as IButtonType,
+    type: String as PropType<IButtonType>,
     default: 'default',
     validator: (val: string) => {
       return [
@@ -45,7 +51,7 @@ export const originalProps = {
     default: ''
   },
   nativeType: {
-    type: String as IButtonNativeType,
+    type: String as PropType<IButtonNativeType>,
     default: 'button',
     validator: (val: string) => {
       return ['button', 'submit', 'reset'].includes(val)

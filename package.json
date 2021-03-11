@@ -9,10 +9,11 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "build:lib": "webpack --config ./scripts/build/webpack.config.js",
+    "build:comp": "bash scripts/build/build.sh",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
     "format": "prettier --write \"src/**/*.{ts,vue}\"",
-    "cli:v": "cvue"
+    "cli": "cvue"
   },
   "schematics": "./packages/cli/src/collection.json",
   "dependencies": {
