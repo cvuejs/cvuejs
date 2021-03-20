@@ -1,0 +1,9 @@
+import Core<%= classify(name) %> from './<%= dasherize(name) %>.vue';
+import { CoreVueConstructor } from '../../dtos/core.dto';
+
+const <%= classify(name) %> = Core<%= classify(name) %> as CoreVueConstructor;
+<%= classify(name) %>.install = (Vue) => {
+  Vue.component(<%= classify(name) %>.options.name, <%= classify(name) %>);
+};
+
+export { <%= classify(name) %> };
