@@ -1,7 +1,9 @@
-import { CommonAdapter } from '@cvue/shared/dtos/common' 
-import { ButtonProps } from './props'
+import { CommonAdapter } from '@cvue/shared/dtos/common'
+import { ButtonEvents, ButtonProps } from './attrs'
 
-export interface ButtonAdapter extends Partial<ButtonProps>, CommonAdapter {
+export interface ButtonAdapter
+  extends Partial<ButtonProps & ButtonEvents & CommonAdapter> {
+  /** 按钮文字 */
   text?: string
 }
 

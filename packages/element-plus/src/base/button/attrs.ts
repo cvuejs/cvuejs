@@ -1,6 +1,5 @@
 import { PropType } from 'vue'
 import { ComponentSize } from '../../utils/dtos'
-import { isValidComponentSize } from '../../utils/validators'
 
 type IButtonType =
   | 'primary'
@@ -26,36 +25,22 @@ export interface ButtonProps {
   circle: boolean
 }
 
+export interface ButtonEvents {
+  onClick(): void
+}
+
 export const originalProps = {
   type: {
-    type: String as PropType<IButtonType>,
-    default: 'default',
-    validator: (val: string) => {
-      return [
-        'default',
-        'primary',
-        'success',
-        'warning',
-        'info',
-        'danger',
-        'text'
-      ].includes(val)
-    }
+    type: String as PropType<IButtonType>
   },
   size: {
-    type: String as PropType<ComponentSize>,
-    validator: isValidComponentSize
+    type: String as PropType<ComponentSize>
   },
   icon: {
-    type: String,
-    default: ''
+    type: String
   },
   nativeType: {
-    type: String as PropType<IButtonNativeType>,
-    default: 'button',
-    validator: (val: string) => {
-      return ['button', 'submit', 'reset'].includes(val)
-    }
+    type: String as PropType<IButtonNativeType>
   },
   loading: Boolean,
   disabled: Boolean,

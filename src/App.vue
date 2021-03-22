@@ -1,10 +1,26 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
   <router-view />
+  <c-button :c="buttonConfig"></c-button>
 </template>
+
+<script lang="ts">
+import { ButtonAdapter } from '@cvue/element-plus/src/base/button/adapter'
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  setup() {
+    const buttonConfig: ButtonAdapter = {
+      text: '32',
+      onClick() {
+        console.log(1)
+      }
+    }
+    return {
+      buttonConfig
+    }
+  }
+})
+</script>
 
 <style lang="scss">
 #app {

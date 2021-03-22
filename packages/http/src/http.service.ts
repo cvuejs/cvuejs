@@ -1,4 +1,3 @@
-import { defaultsDeep } from 'lodash';
 import http, { AxiosResponse, CancelToken } from 'axios'
 import { HTTP_DEFAULT_CONFIG } from './http.constant'
 import { HttpSendOption, HttpReturnType } from './http.dto'

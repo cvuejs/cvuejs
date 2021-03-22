@@ -5,11 +5,11 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import { ButtonAdapter, BUTTON_DEFAULT } from './adapter'
 import { ElButton } from 'element-plus'
-import { originalProps } from './props'
-import _ from 'lodash'
+import { originalProps } from './attrs'
+import { useAttrs } from '../../utils/setups/useAttrs'
 
 export default defineComponent({
   name: 'CButton',
@@ -24,16 +24,9 @@ export default defineComponent({
     },
     ...originalProps
   },
-  setup(props, ctx) {
-    const attrs = computed(() => {
-    return _(props.c)
-      .defaultsDeepSafe(BUTTON_DEFAULT)
-      .value()
-  })
-    console.log(ctx)
-    return {
-      attrs
-    }
+  setup(props) {
+    const { attrs } = useAttrs(props, BUTTON_DEFAULT)
+    return { attrs }
   }
 })
 </script>

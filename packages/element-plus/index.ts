@@ -1,3 +1,4 @@
+import { InstallOptions, setConfig } from './src/utils/config/index'
 import './src/utils/lodash'
 import { App } from 'vue'
 // import './src/utils/vee-validate'
@@ -9,7 +10,8 @@ export * from './src/combine'
 
 const components = [..._.values(Base)]
 
-const install = function(app: App) {
+const install = function(app: App, opt: InstallOptions) {
+  setConfig(opt)
   components.forEach((component) => {
     app.component(component.name, component)
   })

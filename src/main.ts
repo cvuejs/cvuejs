@@ -1,3 +1,4 @@
+import { InstallOptions } from './../packages/element-plus/src/utils/config/index';
 import { createApp } from 'vue'
 import cvue from '@cvue/element-plus'
 import App from './App.vue'
@@ -15,8 +16,14 @@ HttpConfig({
   }
 })
 
+const cvueOpt: InstallOptions = {
+  button: {
+    size: 'mini'
+  }
+}
+
 app
   .use(store)
   .use(router)
-  .use(cvue)
+  .use(cvue, cvueOpt)
   .mount('#app')
