@@ -1,26 +1,12 @@
-import { InstallOptions } from './../packages/element-plus/src/utils/config/index';
+import { cvueOpt } from './config'
 import { createApp } from 'vue'
 import cvue from '@cvue/element-plus'
 import App from './App.vue'
 import router from './router'
 import store from './store'
 import 'element-plus/lib/theme-chalk/index.css'
-import { HttpConfig } from '@cvue/http'
-import * as MockData from '../_mock'
 
 const app = createApp(App)
-
-HttpConfig({
-  mock: {
-    data: MockData
-  }
-})
-
-const cvueOpt: InstallOptions = {
-  button: {
-    size: 'mini'
-  }
-}
 
 app
   .use(store)

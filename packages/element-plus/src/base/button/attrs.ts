@@ -1,4 +1,3 @@
-import { PropType } from 'vue'
 import { ComponentSize } from '../../utils/dtos'
 
 type IButtonType =
@@ -26,26 +25,5 @@ export interface ButtonProps {
 }
 
 export interface ButtonEvents {
-  onClick(): void
-}
-
-export const originalProps = {
-  type: {
-    type: String as PropType<IButtonType>
-  },
-  size: {
-    type: String as PropType<ComponentSize>
-  },
-  icon: {
-    type: String
-  },
-  nativeType: {
-    type: String as PropType<IButtonNativeType>
-  },
-  loading: Boolean,
-  disabled: Boolean,
-  plain: Boolean,
-  autofocus: Boolean,
-  round: Boolean,
-  circle: Boolean
+  onClick(e: MouseEvent): void
 }

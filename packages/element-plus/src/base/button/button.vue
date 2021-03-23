@@ -8,11 +8,14 @@
 import { defineComponent, PropType } from 'vue'
 import { ButtonAdapter, BUTTON_DEFAULT } from './adapter'
 import { ElButton } from 'element-plus'
-import { originalProps } from './attrs'
 import { useAttrs } from '../../utils/setups/useAttrs'
+import {
+  COMPONENT_NAME,
+  COMPONENT_TYPE
+} from '../../utils/constants/component'
 
 export default defineComponent({
-  name: 'CButton',
+  name: COMPONENT_NAME.button,
   components: { ElButton },
   props: {
     c: {
@@ -21,11 +24,10 @@ export default defineComponent({
     },
     n: {
       type: String
-    },
-    ...originalProps
+    }
   },
   setup(props) {
-    const { attrs } = useAttrs(props, BUTTON_DEFAULT)
+    const { attrs } = useAttrs(props, BUTTON_DEFAULT, COMPONENT_TYPE.button)
     return { attrs }
   }
 })

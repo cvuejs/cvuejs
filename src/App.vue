@@ -1,6 +1,6 @@
 <template>
   <router-view />
-  <c-button :c="buttonConfig"></c-button>
+  <c-button :c="buttonConfig" sh="1"></c-button>
 </template>
 
 <script lang="ts">
