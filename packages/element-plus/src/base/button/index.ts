@@ -1,5 +1,5 @@
 import { COMPONENT_TYPE } from '../../utils/constants/component';
-import { ButtonAdapter } from './adapter'
+import { ButtonAdapter } from './button.adapter'
 import Button from './button.vue'
 import { App } from 'vue'
 import { setComponentConfig } from '../../utils/config'
