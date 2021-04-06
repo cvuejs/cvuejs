@@ -6,7 +6,16 @@ interface UsePaginationOpt {
 }
 
 export const usePagination = ({ attrs }: UsePaginationOpt) => {
-  console.log(attrs)
-  const output = computed(() => ({}))
-  return output
+  const output = computed(() => ({
+    setPageNo,
+    setPageSize
+  }))
+  return { output }
+
+  function setPageNo(page = 1) {
+    attrs.value.currentPage = page
+  }
+  function setPageSize(pageSize = 10) {
+    attrs.value.pageSize = pageSize
+  }
 }

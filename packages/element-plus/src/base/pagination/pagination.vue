@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, reactive } from 'vue'
 import {
   PaginationAdapter,
   PaginationBindsOmitKeys,
@@ -21,19 +21,20 @@ import {
 } from './pagination.adapter'
 import { ElPagination } from 'element-plus'
 import { COMPONENT_NAME, COMPONENT_TYPE } from '../../utils/constants/component'
-import { useProvider } from '../../utils/setups/useProvider'
-import { useCommonSetup } from '../../utils/setups/useCommonSetup'
-import { useComputeAttrs } from '../../utils/setups/useComputeAttrs'
+import { useProvider } from '../../utils/hooks/useProvider'
+import { useCommonSetup } from '../../utils/hooks/useCommonSetup'
+import { useComputeAttrs } from '../../utils/hooks/useComputeAttrs'
 import { usePagination } from './pagination.use'
 
 export default defineComponent({
   name: COMPONENT_NAME.pagination,
   inheritAttrs: false,
   components: { ElPagination },
+  emits: ['output-change'],
   props: {
     c: {
       type: Object as PropType<PaginationAdapter>,
-      default: () => ({})
+      default: () => (reactive({}))
     },
     n: {
       type: String
@@ -51,7 +52,7 @@ export default defineComponent({
     })
 
     /** 组件输出 */
-    const output = usePagination({ attrs })
+    const { output } = usePagination({ attrs })
 
     /** 注册、注销组件 */
     useProvider({ attrs, output, type, ctx })
@@ -63,5 +64,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style lang="scss"></style>

@@ -12,6 +12,7 @@ export interface DialogAdapter
       DialogEvents &
       ElCommonAdapter<DialogAdapter, DialogOutput, DialogSlots>
   > {
+  /** 底部按钮组 */
   footerButtonGroup?: ButtonGroupAdapter
 }
 
@@ -20,4 +21,6 @@ export interface DialogOutput {
   close(): void
 }
 
-export const DIALOG_DEFAULT: DialogAdapter = {}
+export const DIALOG_DEFAULT: DialogAdapter = {
+  modelValue: false
+}

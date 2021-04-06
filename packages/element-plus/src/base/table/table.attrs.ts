@@ -1,10 +1,18 @@
+import { ComponentCallbackInjectParam } from '@cvue/shared/dtos/common'
+import { TableAdapter, TableOutput } from './table.adapter'
+
 interface RowData {
-  row: object
+  row: Record<string, any>
   rowIndex: number
 }
 interface CellData extends RowData {
-  column: object
+  column: Record<string, any>
   columnIndex: number
+}
+
+interface Sort {
+  prop: string
+  order?: 'ascending' | 'descending'
 }
 
 export interface TableProps {
@@ -16,7 +24,7 @@ export interface TableProps {
   fit: boolean
   stripe: boolean
   border: boolean
-  rowKey: string | ((row: object) => unknown)
+  rowKey: string | ((row: Record<string, any>) => unknown)
   showHeader: boolean
   showSummary: boolean
   sumText: string
@@ -34,18 +42,115 @@ export interface TableProps {
   emptyText: string
   expandRowKeys: (string | number)[]
   defaultExpandAll: boolean
-  defaultSort: { prop: string, order?: 'ascending' | 'descending' }
+  defaultSort: Sort
   tooltipEffect: 'dark' | 'light'
-  spanMethod: ((data: CellData) => unknown)
+  spanMethod: (data: CellData) => unknown
   selectOnIndeterminate: boolean
   indent: number
   treeProps: object
   lazy: boolean
-  load: (row: object, treeNode: object, resolve: Function) => unknown
+  load: (
+    row: Record<string, any>,
+    treeNode: Record<string, any>,
+    resolve: Function
+  ) => unknown
 }
 
 export interface TableEvents {
-  onSelect(selection: any[], row: object): unknown
+  onSelect(
+    selection: Record<string, any>[],
+    row: Record<string, any>,
+    componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
+  ): unknown
+  onSelectAll(
+    selection: Record<string, any>[],
+    componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
+  ): unknown
+  onSelectionChange(
+    selection: Record<string, any>[],
+    componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
+  ): unknown
+  onCellMouseEnter(
+    row: Record<string, any>[],
+    column: Record<string, any>[],
+    cell: HTMLTableCellElement,
+    event: MouseEvent,
+    componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
+  ): unknown
+  onCellMouseLeave(
+    row: Record<string, any>[],
+    column: Record<string, any>[],
+    cell: HTMLTableCellElement,
+    event: MouseEvent,
+    componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
+  ): unknown
+  onCellClick(
+    row: Record<string, any>[],
+    column: Record<string, any>[],
+    cell: HTMLTableCellElement,
+    event: MouseEvent,
+    componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
+  ): unknown
+  onCellDbclick(
+    row: Record<string, any>[],
+    column: Record<string, any>[],
+    cell: HTMLTableCellElement,
+    event: MouseEvent,
+    componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
+  ): unknown
+  onRowClick(
+    row: Record<string, any>[],
+    column: Record<string, any>[],
+    event: MouseEvent,
+    componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
+  ): unknown
+  onRowDbclick(
+    row: Record<string, any>[],
+    column: Record<string, any>[],
+    event: MouseEvent,
+    componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
+  ): unknown
+  onRowContextmenu(
+    row: Record<string, any>[],
+    column: Record<string, any>[],
+    event: MouseEvent,
+    componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
+  ): unknown
+  onHeaderClick(
+    column: Record<string, any>[],
+    event: MouseEvent,
+    componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
+  ): unknown
+  onHeaderContextmenu(
+    column: Record<string, any>[],
+    event: MouseEvent,
+    componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
+  ): unknown
+  onSortChange(
+    sortData: { column: Record<string, any>[] } & Required<Sort>,
+    componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
+  ): unknown
+  onFilterChange(
+    filters: any[],
+    componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
+  ): unknown
+  onCurrentChange(
+    currentRow: Record<string, any>[],
+    oldCurrentRow: Record<string, any>[],
+    componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
+  ): unknown
+  onHeaderDragend(
+    newWidth: number,
+    oldWidth: number,
+    column: Record<string, any>[],
+    event: MouseEvent,
+    componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
+  ): unknown
+  onExpandChange(
+    row: Record<string, any>[],
+    expanded: any,
+    componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
+  ): unknown
 }
 
-export type TableSlots = 'default'
+export type TableSlots = 'default' | 'append'

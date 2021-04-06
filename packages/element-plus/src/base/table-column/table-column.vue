@@ -36,18 +36,17 @@
       </template>
     </template>
 
-    <template v-if="computedSlotName('header')" #header="{scope}">
+    <template v-if="computedSlotName('header')" #header="scope">
       <slot
         :name="computedSlotName('header')"
-        :attrs="attrs"
-        :scope="scope"
+        v-bind="{ attrs, ...scope }"
       ></slot>
     </template>
   </el-table-column>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, reactive } from 'vue'
 import {
   TableColumnAdapter,
   TableColumnBindsOmitKeys,
@@ -55,9 +54,9 @@ import {
 } from './table-column.adapter'
 import { ElTableColumn } from 'element-plus'
 import { COMPONENT_NAME, COMPONENT_TYPE } from '../../utils/constants/component'
-import { useProvider } from '../../utils/setups/useProvider'
-import { useCommonSetup } from '../../utils/setups/useCommonSetup'
-import { useComputeAttrs } from '../../utils/setups/useComputeAttrs'
+import { useProvider } from '../../utils/hooks/useProvider'
+import { useCommonSetup } from '../../utils/hooks/useCommonSetup'
+import { useComputeAttrs } from '../../utils/hooks/useComputeAttrs'
 import { useTableColumn } from './table-column.use'
 import { ButtonGroup } from '../button-group'
 
@@ -68,7 +67,7 @@ export default defineComponent({
   props: {
     c: {
       type: Object as PropType<TableColumnAdapter>,
-      default: () => ({})
+      default: () => (reactive({}))
     },
     n: {
       type: String
@@ -90,7 +89,6 @@ export default defineComponent({
 
     /** 注册、注销组件 */
     useProvider({ attrs, output, type, ctx })
-
     /** 组件通用setup */
     const { computedSlotName } = useCommonSetup({ attrs, output })
     return { attrs, binds, computedSlotName, getButtonGroup }
@@ -98,4 +96,5 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+</style>

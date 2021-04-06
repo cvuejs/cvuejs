@@ -1,5 +1,13 @@
 <template>
-  <el-table class="c-table" :ref="$options.name" v-bind="binds">
+  <el-table
+    class="c-table"
+    :ref="$options.name"
+    v-bind="binds"
+    v-loading="loading"
+    :element-loading-text="loadingSetting.text"
+    :element-loading-spinner="loadingSetting.spinner"
+    :element-loading-background="loadingSetting.background"
+  >
     <template #default>
       <slot
         v-if="computedSlotName('default')"
@@ -13,8 +21,8 @@
           :key="index"
           :c="column"
         >
-          <template v-for="(_, slot) in $slots" #[slot]="{scope, attrs}">
-            <slot :name="slot" :attrs="attrs" :scope="scope"></slot>
+          <template v-for="(_, slot) in $slots" #[slot]="scope">
+            <slot :name="slot" v-bind="scope"></slot>
           </template>
         </TableColumn>
       </template>
@@ -27,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, reactive, toRefs } from 'vue'
 import {
   TableAdapter,
   TableBindsOmitKeys,
@@ -35,20 +43,21 @@ import {
 } from './table.adapter'
 import { ElTable } from 'element-plus'
 import { COMPONENT_NAME, COMPONENT_TYPE } from '../../utils/constants/component'
-import { useProvider } from '../../utils/setups/useProvider'
-import { useCommonSetup } from '../../utils/setups/useCommonSetup'
-import { useComputeAttrs } from '../../utils/setups/useComputeAttrs'
-import { useTable } from './table.use'
+import { useProvider } from '../../utils/hooks/useProvider'
+import { useCommonSetup } from '../../utils/hooks/useCommonSetup'
+import { useComputeAttrs } from '../../utils/hooks/useComputeAttrs'
+import { TableState, useTable } from './table.use'
 import { TableColumn } from '../table-column'
 
 export default defineComponent({
   name: COMPONENT_NAME.table,
   inheritAttrs: false,
   components: { ElTable, TableColumn },
+  emits: ['output-change'],
   props: {
     c: {
       type: Object as PropType<TableAdapter>,
-      default: () => ({})
+      default: () => reactive({})
     },
     n: {
       type: String
@@ -56,6 +65,10 @@ export default defineComponent({
   },
   setup(props, ctx) {
     const type = COMPONENT_TYPE.table
+    const state = reactive<TableState>({
+      loading: false,
+      loadingSetting: {}
+    })
 
     /** 合并配置，获取attrs */
     const { attrs, binds } = useComputeAttrs<TableAdapter>({
@@ -66,16 +79,14 @@ export default defineComponent({
     })
 
     /** 组件输出 */
-    const output = useTable({ attrs })
+    const { output } = useTable({ attrs, state })
 
     /** 注册、注销组件 */
     useProvider({ attrs, output, type, ctx })
 
     /** 组件通用setup */
     const { computedSlotName } = useCommonSetup({ attrs, output })
-    return { attrs, binds, computedSlotName }
+    return { attrs, binds, computedSlotName, ...toRefs(state) }
   }
 })
 </script>
-
-<style lang="scss"></style>

@@ -16,7 +16,7 @@ export interface ButtonAdapter
 }
 
 export interface ButtonOutput {
-  loading(boo?: boolean): void
+  loading(boo?: boolean): unknown
 }
 
 export const BUTTON_DEFAULT: ButtonAdapter = {

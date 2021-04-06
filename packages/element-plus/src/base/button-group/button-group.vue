@@ -10,7 +10,7 @@
         <Button
           v-for="(button, index) in attrs.buttons || []"
           :key="index"
-          :c="button"
+          :c="setInner(button)"
         ></Button>
       </template>
     </template>
@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, reactive } from 'vue'
 import {
   ButtonGroupAdapter,
   ButtonGroupBindsOmitKeys,
@@ -26,9 +26,9 @@ import {
 } from './button-group.adapter'
 import { ElButtonGroup } from 'element-plus'
 import { COMPONENT_NAME, COMPONENT_TYPE } from '../../utils/constants/component'
-import { useProvider } from '../../utils/setups/useProvider'
-import { useCommonSetup } from '../../utils/setups/useCommonSetup'
-import { useComputeAttrs } from '../../utils/setups/useComputeAttrs'
+import { useProvider } from '../../utils/hooks/useProvider'
+import { useCommonSetup } from '../../utils/hooks/useCommonSetup'
+import { useComputeAttrs } from '../../utils/hooks/useComputeAttrs'
 import { useButtonGroup } from './button-group.use'
 import { Button } from '../button'
 
@@ -39,7 +39,7 @@ export default defineComponent({
   props: {
     c: {
       type: Object as PropType<ButtonGroupAdapter>,
-      default: () => ({})
+      default: () => (reactive({}))
     },
     n: {
       type: String
@@ -63,10 +63,8 @@ export default defineComponent({
     useProvider({ attrs, output, type, ctx })
 
     /** 组件通用setup */
-    const { computedSlotName } = useCommonSetup({ attrs, output })
-    return { attrs, binds, computedSlotName }
+    const { computedSlotName, setInner } = useCommonSetup({ attrs, output })
+    return { attrs, binds, computedSlotName, setInner }
   }
 })
 </script>
-
-<style lang="scss"></style>

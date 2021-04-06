@@ -3,7 +3,7 @@
     <template #default>
       <slot :name="computedSlotName('default')" :attrs="attrs"></slot>
     </template>
-    <template #title>
+    <template v-if="computedSlotName('title')" #title>
       <slot :name="computedSlotName('title')" :attrs="attrs"></slot>
     </template>
     <template #footer>
@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, reactive } from 'vue'
 import {
   DialogAdapter,
   DialogBindsOmitKeys,
@@ -26,9 +26,9 @@ import {
 } from './dialog.adapter'
 import { ElDialog } from 'element-plus'
 import { COMPONENT_NAME, COMPONENT_TYPE } from '../../utils/constants/component'
-import { useProvider } from '../../utils/setups/useProvider'
-import { useCommonSetup } from '../../utils/setups/useCommonSetup'
-import { useComputeAttrs } from '../../utils/setups/useComputeAttrs'
+import { useProvider } from '../../utils/hooks/useProvider'
+import { useCommonSetup } from '../../utils/hooks/useCommonSetup'
+import { useComputeAttrs } from '../../utils/hooks/useComputeAttrs'
 import { useDialog } from './dialog.use'
 import { ButtonGroup } from '../button-group'
 
@@ -39,7 +39,7 @@ export default defineComponent({
   props: {
     c: {
       type: Object as PropType<DialogAdapter>,
-      default: () => ({})
+      default: () => reactive({})
     },
     n: {
       type: String
@@ -69,5 +69,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style lang="scss"></style>

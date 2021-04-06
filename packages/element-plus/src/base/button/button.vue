@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, reactive } from 'vue'
 import {
   ButtonAdapter,
   ButtonOmitBindsKeys,
@@ -25,9 +25,9 @@ import {
 } from './button.adapter'
 import { ElButton } from 'element-plus'
 import { COMPONENT_NAME, COMPONENT_TYPE } from '../../utils/constants/component'
-import { useProvider } from '../../utils/setups/useProvider'
-import { useCommonSetup } from '../../utils/setups/useCommonSetup'
-import { useComputeAttrs } from '../../utils/setups/useComputeAttrs'
+import { useProvider } from '../../utils/hooks/useProvider'
+import { useCommonSetup } from '../../utils/hooks/useCommonSetup'
+import { useComputeAttrs } from '../../utils/hooks/useComputeAttrs'
 import { useButton } from './button.use'
 import { BUTTON_PROPS } from './button.attrs'
 
@@ -38,7 +38,7 @@ export default defineComponent({
   props: {
     c: {
       type: Object as PropType<ButtonAdapter>,
-      default: () => ({})
+      default: () => (reactive({}))
     },
     n: {
       type: String
