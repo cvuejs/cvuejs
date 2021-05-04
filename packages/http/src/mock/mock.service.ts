@@ -7,52 +7,60 @@ const DEFAULT_RETURN = {
   httpStatus: 200
 }
 
+interface MockReturnType {
+  isMatch: boolean
+  res: HttpReturnType
+}
+
 class MockServiceClass {
-  async mock(option: HttpSendOption): Promise<HttpReturnType> {
+  async mock(option: HttpSendOption): Promise<MockReturnType> {
     const { mock, method, url } = option
-    if (!mock) return DEFAULT_RETURN
+    if (!mock) return { isMatch: false, res: DEFAULT_RETURN }
 
     const defaultReturn = this.delay(
-      mock.force
-        ? {
-            e: true,
-            httpStatus: 404
-          }
-        : DEFAULT_RETURN,
+      {
+        e: true,
+        httpStatus: 404
+      },
       mock.delay
     )
 
     const data = mock.data
-    if (!data) return defaultReturn
+    if (!data) return { isMatch: false, res: await defaultReturn }
     const matchRule = this.matchMockData(data, url, method)
     if (!matchRule || !matchRule.res) {
       if (mock.log) {
         console.log(
-          `%c${method}->${url}->未被mock匹配，返回404`,
+          `%c${method}->${url}->未被mock匹配，${
+            mock.force ? '返回404' : '发送真实请求'
+          }`,
           'background:#000;color:#ccba50'
         )
       }
-      return defaultReturn
+      return { isMatch: false, res: await defaultReturn }
     }
 
-    const resData =
-      typeof matchRule.res === 'function'
-        ? matchRule.res(option)
-        : mock.copy
-        ? _.cloneDeep(matchRule.res)
-        : matchRule.res
+    const resData = _.isFunction(matchRule.res)
+      ? matchRule.res(option)
+      : mock.copy
+      ? _.cloneDeep(matchRule.res)
+      : matchRule.res
     const res = {
       e: false,
       data: resData,
       httpStatus: 200
     }
     if (mock.log) {
+      console.group()
       console.log(
-        `%c${matchRule.method}->${matchRule.url}->${matchRule.res}`,
+        `%c${matchRule.method}->${matchRule.url}->`,
         'background:#000;color:#ccba50'
       )
+      console.log('params->', option.params)
+      console.log('res->', matchRule.res)
+      console.groupEnd()
     }
-    return this.delay(res, mock.delay)
+    return { isMatch: true, res: await this.delay(res, mock.delay) }
   }
 
   matchMockData(

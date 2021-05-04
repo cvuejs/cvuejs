@@ -1,7 +1,10 @@
 // import Vue from 'vue';
+import { nextTick } from '@vue/runtime-core';
 import _ from 'lodash'
 
 _.mixin({ defaultsDeepSafe: defaultsDeepPreserveArray })
+_.mixin({ assignWithObjectDeep: assignWithObjectDeep })
+_.mixin({ assignModelsWithObjectDeep: assignModelsWithObjectDeep })
 
 /**
  * 将源对象完全拷贝层目标对象
@@ -62,6 +65,31 @@ function defaultsDeepPreserveArray(
 }
 
 /**
+ * 类似assign，但是会对对象进行深度遍历，
+ * @param object 目标对象
+ * @param source 来源对象
+ */
+function assignWithObjectDeep(
+  object: Record<string, any>,
+  source: Record<string, any>
+) {
+  return _.assignWith(object, source, assignDeepCustomizer)
+}
+/**
+ * 类似assign，但是会对对象进行深度遍历，
+ * @param object 目标对象
+ * @param source 来源对象
+ */
+function assignModelsWithObjectDeep(
+  object: Record<string, any>,
+  source: Record<string, any>,
+  extraKeys: string[] = []
+) {
+  const customizer = assignModelsDeepCustomizer(extraKeys)
+  return _.assignWith(object, source, customizer)
+}
+
+/**
  * 如果srcValue是数组，直接返回整个srcValue
  * @param objValue 目标值
  * @param srcValue 来源值
@@ -70,4 +98,34 @@ function preserveArrayInterceptor(objValue: any, srcValue: any) {
   if (_.isArray(srcValue)) {
     return srcValue
   }
+}
+function assignDeepCustomizer(objValue: any, srcValue: any): any {
+  if (_.isPlainObject(objValue) && _.isPlainObject(srcValue)) {
+    return _.assignWith(objValue, srcValue, assignDeepCustomizer)
+  }
+  return _.isUndefined(srcValue) ? objValue : srcValue
+}
+function assignModelsDeepCustomizer(extraKeys: string[]) {
+  const fn = function(
+    objValue: any,
+    srcValue: any,
+    key: string,
+    object: Record<string, any>
+  ): any {
+    if (_.isPlainObject(objValue) && _.isPlainObject(srcValue)) {
+      return _.assignWith(objValue, srcValue, fn)
+    }
+    if (
+      _.isUndefined(objValue) &&
+      !_.isUndefined(srcValue) &&
+      !extraKeys.includes(key)
+    ) {
+      nextTick(() => {
+        Reflect.deleteProperty(object, key)
+      })
+      return
+    }
+    return _.isUndefined(srcValue) ? objValue : srcValue
+  }
+  return fn
 }

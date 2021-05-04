@@ -1,9 +1,10 @@
 <template>
   <Field
     class="c-form-item"
-    :name="fieldName"
-    :rules="attrs.rules"
+    :name="attrs.validateFieldName || attrs.label || ''"
+    :rules="attrs.rules || ''"
     v-slot="{ errors }"
+    v-model="formAttrs.models[attrs.prop]"
   >
     <el-form-item
       :ref="$options.name"
@@ -11,7 +12,8 @@
       v-bind="binds"
       :class="{
         'c-form-item__item': true,
-        'is-required': attrs.rules && attrs.rules.includes('required'),
+        [attrs.className || '']: true,
+        'is-required': isRequired,
         'is-error': errors[0],
         [`is-content-${align}`]: align
       }"
@@ -20,7 +22,7 @@
         <Input
           v-if="!attrs.type || attrs.type === 'input'"
           :class="[attrs.formControlClassName]"
-          :c="setInner(attrs.inputConfig)"
+          :c="setInner(attrs.input)"
           v-model="formAttrs.models[attrs.prop]"
         >
           <template v-for="(_, slot) in $slots" #[slot]="scope">
@@ -31,7 +33,7 @@
         <Select
           v-else-if="attrs.type === 'select'"
           :class="[attrs.formControlClassName]"
-          :c="setInner(attrs.selectConfig)"
+          :c="setInner(attrs.select)"
           v-model="formAttrs.models[attrs.prop]"
         >
           <template v-for="(_, slot) in $slots" #[slot]="scope">
@@ -42,7 +44,7 @@
         <DatePicker
           v-else-if="attrs.type === 'date-picker'"
           :class="[attrs.formControlClassName]"
-          :c="setInner(attrs.datePickerConfig)"
+          :c="setInner(attrs.datePicker)"
           v-model="formAttrs.models[attrs.prop]"
         >
           <template v-for="(_, slot) in $slots" #[slot]="scope">
@@ -53,7 +55,7 @@
         <TimePicker
           v-else-if="attrs.type === 'time-picker'"
           :class="[attrs.formControlClassName]"
-          :c="setInner(attrs.timePickerConfig)"
+          :c="setInner(attrs.timePicker)"
           v-model="formAttrs.models[attrs.prop]"
         >
           <template v-for="(_, slot) in $slots" #[slot]="scope">
@@ -64,7 +66,7 @@
         <Checkbox
           v-else-if="attrs.type === 'checkbox'"
           :class="[attrs.formControlClassName]"
-          :c="setInner(attrs.checkboxConfig)"
+          :c="setInner(attrs.checkbox)"
           v-model="formAttrs.models[attrs.prop]"
         >
           <template v-for="(_, slot) in $slots" #[slot]="scope">
@@ -75,7 +77,7 @@
         <CheckboxGroup
           v-else-if="attrs.type === 'checkbox-group'"
           :class="[attrs.formControlClassName]"
-          :c="setInner(attrs.checkboxGroupConfig)"
+          :c="setInner(attrs.checkboxGroup)"
           v-model="formAttrs.models[attrs.prop]"
         >
           <template v-for="(_, slot) in $slots" #[slot]="scope">
@@ -86,7 +88,7 @@
         <Radio
           v-else-if="attrs.type === 'radio'"
           :class="[attrs.formControlClassName]"
-          :c="setInner(attrs.radioConfig)"
+          :c="setInner(attrs.radio)"
           v-model="formAttrs.models[attrs.prop]"
         >
           <template v-for="(_, slot) in $slots" #[slot]="scope">
@@ -97,7 +99,7 @@
         <RadioGroup
           v-else-if="attrs.type === 'radio-group'"
           :class="[attrs.formControlClassName]"
-          :c="setInner(attrs.radioGroupConfig)"
+          :c="setInner(attrs.radioGroup)"
           v-model="formAttrs.models[attrs.prop]"
         >
           <template v-for="(_, slot) in $slots" #[slot]="scope">
@@ -105,7 +107,28 @@
           </template>
         </RadioGroup>
 
+        <Upload
+          v-else-if="attrs.type === 'upload'"
+          :class="[attrs.formControlClassName]"
+          :c="setInner(attrs.upload)"
+          v-model="formAttrs.models[attrs.prop]"
+        >
+          <template v-for="(_, slot) in $slots" #[slot]="scope">
+            <slot :name="slot" v-bind="scope"></slot>
+          </template>
+        </Upload>
+
+        <div v-else-if="attrs.type === 'div'">
+          {{ formAttrs.models[attrs.prop] }}
+        </div>
+
         <template v-else-if="attrs.type === 'empty'"></template>
+
+        <slot
+          v-else-if="attrs.type === 'slot'"
+          :name="slotConfig.name"
+          :scope="slotConfig.scope"
+        ></slot>
 
         <span class="c-form-item__error">{{ errors[0] }}</span>
         <span v-if="!errors[0] && attrs.tip" class="c-form-item__tip">
@@ -121,13 +144,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  getCurrentInstance,
-  PropType,
-  reactive,
-  toRefs
-} from 'vue'
+import { defineComponent, PropType, reactive, toRefs } from 'vue'
 import {
   FormItemAdapter,
   FormItemBindsOmitKeys,
@@ -138,7 +155,7 @@ import { COMPONENT_NAME, COMPONENT_TYPE } from '../../utils/constants/component'
 import { useProvider } from '../../utils/hooks/useProvider'
 import { useCommonSetup } from '../../utils/hooks/useCommonSetup'
 import { useComputeAttrs } from '../../utils/hooks/useComputeAttrs'
-import { FormItemState, useFormItem } from './form-item.use'
+import { useFormItem } from './form-item.use'
 import { Field } from 'vee-validate'
 import { Input } from '../input'
 import { Select } from '../select'
@@ -148,6 +165,7 @@ import { Checkbox } from '../checkbox'
 import { CheckboxGroup } from '../checkbox-group'
 import { Radio } from '../radio'
 import { RadioGroup } from '../radio-group'
+import { Upload } from '../upload'
 
 export default defineComponent({
   name: COMPONENT_NAME.formItem,
@@ -162,7 +180,8 @@ export default defineComponent({
     Checkbox,
     CheckboxGroup,
     Radio,
-    RadioGroup
+    RadioGroup,
+    Upload
   },
   emits: ['output-change'],
   props: {
@@ -176,11 +195,6 @@ export default defineComponent({
   },
   setup(props, ctx) {
     const type = COMPONENT_TYPE.formItem
-    const instance = getCurrentInstance()
-
-    const state = reactive<FormItemState>({
-      fieldName: instance!.uid + ''
-    })
 
     /** 合并配置，获取attrs */
     const { attrs, binds } = useComputeAttrs<FormItemAdapter>({
@@ -191,7 +205,7 @@ export default defineComponent({
     })
 
     /** 组件输出 */
-    const { output, formAttrs, align } = useFormItem({ attrs })
+    const { output, formAttrs, state } = useFormItem({ attrs })
 
     /** 注册、注销组件 */
     useProvider({ attrs, output, type, ctx })
@@ -201,7 +215,6 @@ export default defineComponent({
     return {
       attrs,
       binds,
-      align,
       computedSlotName,
       setInner,
       formAttrs,

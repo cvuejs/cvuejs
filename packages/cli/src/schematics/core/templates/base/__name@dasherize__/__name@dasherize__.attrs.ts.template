@@ -1,0 +1,7 @@
+export interface <%= classify(name) %>Props {
+}
+
+export interface <%= classify(name) %>Events {
+}
+
+export type <%= classify(name) %>Slots = 'default'

@@ -14,7 +14,7 @@
 
       <template v-else-if="attrs.type === 'checkbox'">
         <Checkbox
-          v-for="(checkbox, index) in attrs.checkboxs"
+          v-for="(checkbox, index) in attrs.checkboxs || []"
           :key="index"
           :c="checkbox"
         ></Checkbox>
@@ -22,7 +22,7 @@
 
       <template v-else-if="attrs.type === 'checkboxButton'">
         <CheckboxButton
-          v-for="(checkboxButton, index) in attrs.checkboxButtons"
+          v-for="(checkboxButton, index) in attrs.checkboxButtons || []"
           :key="index"
           :c="checkboxButton"
         ></CheckboxButton>

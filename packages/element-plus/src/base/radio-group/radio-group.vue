@@ -14,7 +14,7 @@
 
       <template v-else-if="attrs.type === 'radio'">
         <Radio
-          v-for="(radio, index) in attrs.radios"
+          v-for="(radio, index) in attrs.radios || []"
           :key="index"
           :c="radio"
         ></Radio>
@@ -22,7 +22,7 @@
 
       <template v-else-if="attrs.type === 'radioButton'">
         <RadioButton
-          v-for="(radioButton, index) in attrs.radioButtons"
+          v-for="(radioButton, index) in attrs.radioButtons || []"
           :key="index"
           :c="radioButton"
         ></RadioButton>

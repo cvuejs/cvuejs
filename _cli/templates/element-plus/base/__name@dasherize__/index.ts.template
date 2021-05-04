@@ -1,9 +1,12 @@
-import Core<%= classify(name) %> from './<%= dasherize(name) %>.vue';
-import { CoreVueConstructor } from '../../dtos/core.dto';
+import { COMPONENT_TYPE } from '../../utils/constants/component';
+import { <%= classify(name) %>Adapter } from './<%= dasherize(name) %>.adapter'
+import <%= classify(name) %> from './<%= dasherize(name) %>.vue'
+import { App } from 'vue'
+import { setComponentConfig } from '../../utils/config'
 
-const <%= classify(name) %> = Core<%= classify(name) %> as CoreVueConstructor;
-<%= classify(name) %>.install = (Vue) => {
-  Vue.component(<%= classify(name) %>.options.name, <%= classify(name) %>);
-};
+<%= classify(name) %>.install = (app: App, opt: <%= classify(name) %>Adapter) => {
+  setComponentConfig(COMPONENT_TYPE.<%= camelize(name) %>, opt)
+  app.component(<%= classify(name) %>.name, <%= classify(name) %>)
+}
 
-export { <%= classify(name) %> };
+export { <%= classify(name) %> }

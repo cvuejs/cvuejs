@@ -8,7 +8,9 @@ import {
   mergeWith,
   MergeStrategy,
   apply,
-  Tree
+  Tree,
+  filter,
+  noop
 } from '@angular-devkit/schematics'
 import { InsertChange } from '../../utils/change'
 import { normalize, join, relative } from 'path'
@@ -27,7 +29,7 @@ import * as ts from 'typescript'
 interface ViewConfig extends CliConfigItem {
   name: string
   modulePath: string
-  inlineTs: boolean
+  ignoreRouteInject: boolean
 }
 
 export function setViewRouter(options: Required<ViewConfig>): Rule {
@@ -70,9 +72,15 @@ export function setViewRouter(options: Required<ViewConfig>): Rule {
     } else {
       // 如果页面不在任何模块下，需要将新建页面的路由代码注入到全局的router文件中
       const routerPath = join(options.router)
+      const routerDir = options.router
+        .split('/')
+        .filter((n, i, arr) => {
+          return i !== arr.length - 1
+        })
+        .join('/')
       const routerSource = readIntoSourceFile(host, routerPath)
       const viewRouteName = `${classifyName}Route`
-      const relativePathToView = relative(options.router, options.root)
+      const relativePathToView = relative(routerDir, options.root)
       const viewRoutePath = join(
         relativePathToView,
         options.name,
@@ -91,10 +99,10 @@ export function setViewRouter(options: Required<ViewConfig>): Rule {
         routerRecorder.insertLeft(change.pos, change.toAdd)
       }
 
-      // 默认最后一个带有routes属性的对象为Router对象
+      // 默认带有routes属性的对象为Router对象
       const arrayNodes = findNodes(
         routerSource,
-        ts.SyntaxKind.PropertyAssignment
+        ts.SyntaxKind.VariableDeclaration
       )
         .reverse()
         .filter((node: ts.Node) => {
@@ -104,6 +112,7 @@ export function setViewRouter(options: Required<ViewConfig>): Rule {
         const routerNode = arrayNodes[0]
         const routesArrayNode = routerNode
           .getChildren()
+          .reverse()
           .find((node) => node.kind === ts.SyntaxKind.ArrayLiteralExpression)
         if (routesArrayNode) {
           const indentation = getTextIndentation(
@@ -140,6 +149,9 @@ export function view(options: Required<ViewConfig>): Rule {
     const movePath = normalize(dirPath)
     const templatePath = options.templatePath || './templates'
     const templateSource = apply(url(templatePath), [
+      options.modulePath || options.ignoreRouteInject
+        ? filter((path) => !path.endsWith('index.route.ts.template'))
+        : noop(),
       applyTemplates({
         ...strings,
         ...options
@@ -147,7 +159,7 @@ export function view(options: Required<ViewConfig>): Rule {
       move(movePath)
     ])
     return chain([
-      setViewRouter(options),
+      !options.ignoreRouteInject ? setViewRouter(options) : noop(),
       mergeWith(templateSource, MergeStrategy.Overwrite)
     ])
   }

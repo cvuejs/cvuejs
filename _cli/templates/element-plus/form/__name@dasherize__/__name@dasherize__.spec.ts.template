@@ -1,14 +1,14 @@
-import { shallowMount } from '@vue/test-utils';
-import <%= classify(name) %> from './<%= dasherize(name) %>.vue';
-import '../../utils/lodash';
+import { shallowMount } from '@vue/test-utils'
+import <%= classify(name) %> from './<%= dasherize(name) %>.vue'
+import '../../utils/lodash'
 
-describe('cvue form: <%= dasherize(name) %>', () => {
+describe('cvue base: <%= dasherize(name) %>', () => {
   it('renders', () => {
-    const c = {};
+    const c = {}
     const wrapper = shallowMount(<%= classify(name) %>, {
       stubs: { El<%= classify(name) %>: true },
       propsData: { c }
-    });
-    expect(wrapper.contains('.<%= dasherize(prefix) %>-<%= dasherize(name) %>')).toBe(true);
-  });
-});
+    } as any)
+    expect(wrapper.classes('<%= dasherize(prefix) %>-<%= dasherize(name) %>')).toBe(true)
+  })
+})

@@ -10,6 +10,7 @@ import {
 import { useAsyncData } from '../../utils/hooks/useAsyncData'
 import { useModelValue } from '../../utils/hooks/useModelValue'
 import { COMPONENT_NAME } from '../../utils/constants/component'
+import { OptionGroupAdapter } from '../option-group/option-group.adapter'
 
 interface UseSelectOpt {
   props: Record<string, any>
@@ -26,23 +27,25 @@ export const useSelect = ({ props, attrs, state, ctx }: UseSelectOpt) => {
   const instance = getCurrentInstance()
   const { data, send } = useAsyncData(attrs.value.asyncOptions)
 
-  watchEffect(() => {
-    if (attrs.value.asyncOptions) {
+  watchEffect(
+    () => {
+      if (attrs.value.asyncOptions) {
       if (data.value) {
         switch (attrs.value.type) {
           case 'option':
             attrs.value.options = data.value
             break
           case 'optionGroup':
-            attrs.value.optionGroups = data.value
+            attrs.value.optionGroups = data.value as OptionGroupAdapter[]
             break
           default:
             attrs.value.options = data.value
         }
       }
       attrs.value.loading = !!attrs.value.asyncOptions.loading
+      }
     }
-  })
+  )
 
   if (attrs.value.asyncOptions) {
     const { onVisibleChange, onModelChange } = attrs.value
@@ -69,7 +72,7 @@ export const useSelect = ({ props, attrs, state, ctx }: UseSelectOpt) => {
       }
     }
   }
-
+  
   /** 需要放在改写onModelChange之后 */
   useModelValue({ props, attrs, ctx })
 

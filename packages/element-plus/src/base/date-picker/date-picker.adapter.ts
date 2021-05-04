@@ -13,7 +13,9 @@ export interface DatePickerAdapter
     DatePickerProps &
       DatePickerEvents &
       ElCommonAdapter<DatePickerAdapter, DatePickerOutput, DatePickerSlots>
-  > {}
+  > {
+  pickerOptions?: Record<string, any>
+}
 
 export interface DatePickerOutput {
   focus(): unknown

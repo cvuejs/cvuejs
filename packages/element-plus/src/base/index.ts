@@ -7,6 +7,7 @@ import { TableColumn } from './table-column'
 
 import { Form } from './form'
 import { FormItem } from './form-item'
+import { FormGroup } from './form-group'
 import { Input } from './input'
 import { Select } from './select'
 import { Option } from './option'
@@ -19,6 +20,7 @@ import { CheckboxGroup } from './checkbox-group'
 import { Radio } from './radio'
 import { RadioButton } from './radio-button'
 import { RadioGroup } from './radio-group'
+import { Upload } from './upload'
 
 export {
   Button,
@@ -29,6 +31,7 @@ export {
   TableColumn,
   Form,
   FormItem,
+  FormGroup,
   Input,
   Select,
   Option,
@@ -40,5 +43,6 @@ export {
   CheckboxGroup,
   Radio,
   RadioButton,
-  RadioGroup
+  RadioGroup,
+  Upload
 }

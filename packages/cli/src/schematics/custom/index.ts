@@ -35,7 +35,6 @@ export function custom(options: CustomOption): Rule {
       }),
       move(movePath)
     ])
-    console.log(tempUrl, movePath)
 
     return chain([mergeWith(templateSource, MergeStrategy.Overwrite)])
   }

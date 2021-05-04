@@ -29,5 +29,3 @@ export default class <%= classify(name) %> extends Mixins(CombineFactory) implem
   ComponentType = ComponentTypes.<%= classify(name) %>;
 }
 </script>
-
-<style lang="scss"></style>

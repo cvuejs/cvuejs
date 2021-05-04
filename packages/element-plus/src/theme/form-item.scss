@@ -1,0 +1,54 @@
+@import 'mixins/mixins';
+
+@include b(form-item) {
+  @include e(item) {
+    @include when(content-left) {
+      .el-form-item__content {
+        text-align: left;
+      }
+    }
+    @include when(content-mid) {
+      .el-form-item__content {
+        text-align: center;
+      }
+    }
+    @include when(content-right) {
+      .el-form-item__content {
+        text-align: right;
+      }
+    }
+    @include when(error) {
+      .el-input__inner {
+        border-color: #eb2828;
+      }
+    }
+  }
+
+  @include e(error) {
+    display: inline;
+    position: absolute;
+    bottom: -15px;
+    left: 10px;
+    width: 100%;
+    color: red;
+    font-size: 12px;
+    line-height: 1;
+    text-align: left;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  @include e(tip) {
+    display: inline;
+    position: absolute;
+    bottom: -15px;
+    left: 10px;
+    width: 100%;
+    color: #aaa;
+    font-size: 12px;
+    line-height: 1;
+    text-align: left;
+  }
+}

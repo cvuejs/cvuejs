@@ -1,0 +1,18 @@
+import { ElFormCtrlCommonAdapter } from '../../utils/dtos'
+import { <%= classify(name) %>Events, <%= classify(name) %>Props, <%= classify(name) %>Slots } from './<%= dasherize(name) %>.attrs'
+
+export const <%= classify(name) %>BindsOmitKeys: (keyof <%= classify(name) %>Adapter)[] = [
+  'modelValue'
+]
+export interface <%= classify(name) %>Adapter
+  extends Partial<
+    <%= classify(name) %>Props &
+      <%= classify(name) %>Events &
+      ElFormCtrlCommonAdapter<<%= classify(name) %>Adapter, <%= classify(name) %>Output, <%= classify(name) %>Slots>
+  > {}
+
+export interface <%= classify(name) %>Output {
+}
+
+export const <%= underscore(name).toLocaleUpperCase() %>_DEFAULT: <%= classify(name) %>Adapter = {
+}

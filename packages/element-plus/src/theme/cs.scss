@@ -1,0 +1,6 @@
+@import 'mixins/mixins';
+
+@include b(cs) {
+  width: 100%;
+  padding: 20px;
+}

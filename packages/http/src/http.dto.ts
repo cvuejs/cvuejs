@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios'
+import { AxiosRequestConfig, AxiosResponse } from 'axios'
 
 export type HTTP_METHODS =
   | 'GET'
@@ -17,6 +17,9 @@ export interface HttpReturnType<T = any> {
   data?: T
   response?: any
   httpStatus?: number
+
+  /** 自定义设置 */
+  extra?: Record<string, any>
 }
 
 export interface HttpMockType {
@@ -34,30 +37,29 @@ export interface HttpSendOption {
   prefixUrl?: string // 经过代理的接口前缀地址
   url?: string
   params?: { [key: string]: any }
+  Query?: { [key: string]: any }
   paramsSerializer?(params: { [key: string]: any }): string
   headers?: { [key: string]: any }
   method?: HTTP_METHODS
   bodyType?: HTTP_BODY_TYPES
+  requestConfig?: AxiosRequestConfig
 
-  mockData?: any
-  delay?: number
-
-  responseHandle?(
+  onResponse?(
     res: AxiosResponse<Record<string, any>>,
     option: HttpSendOption
   ): HttpReturnType | Promise<HttpReturnType>
-  errorHandle?: (
+  onError?: (
     res: Record<string, any>,
     option: HttpSendOption,
     httpStatus: number
   ) => void | Promise<void>
-  beforeHttpSend?(
+  onBeforeSend?(
     options: HttpSendOption
   ): HttpSendOption | Promise<HttpSendOption>
 
   /** MOCK相关 */
   mock?: HttpMockType
 
-  /** 用户自定义设置 */
+  /** 自定义设置 */
   extra?: Record<string, any>
 }

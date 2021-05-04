@@ -2,17 +2,20 @@ import { ElFormCtrlCommonAdapter } from '../../utils/dtos'
 import { CheckboxEvents, CheckboxProps, CheckboxSlots } from './checkbox.attrs'
 
 export const CheckboxBindsOmitKeys: (keyof CheckboxAdapter)[] = [
-  'modelValue'
+  'modelValue',
+  'text'
 ]
 export interface CheckboxAdapter
   extends Partial<
     CheckboxProps &
       CheckboxEvents &
       ElFormCtrlCommonAdapter<CheckboxAdapter, CheckboxOutput, CheckboxSlots>
-  > {}
-
-export interface CheckboxOutput {
+  > {
+  text?: string
 }
 
+export interface CheckboxOutput {}
+
 export const CHECKBOX_DEFAULT: CheckboxAdapter = {
+  modelValue: undefined
 }

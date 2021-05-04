@@ -36,5 +36,3 @@ export default class <%= classify(name) %> extends Mixins(FormFactory) implement
   OwnAdapterKeys = [];
 }
 </script>
-
-<style lang="scss"></style>

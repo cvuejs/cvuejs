@@ -1,5 +1,14 @@
 <template>
-  <el-button-group class="c-button-group" :ref="$options.name" v-bind="binds">
+  <el-button-group
+    :class="{
+      'c-button-group': true,
+      'is-left': attrs.align === 'left',
+      'is-mid': attrs.align === 'center',
+      'is-right': attrs.align === 'right'
+    }"
+    :ref="$options.name"
+    v-bind="binds"
+  >
     <template #default>
       <slot
         v-if="computedSlotName('default')"
@@ -39,7 +48,7 @@ export default defineComponent({
   props: {
     c: {
       type: Object as PropType<ButtonGroupAdapter>,
-      default: () => (reactive({}))
+      default: () => reactive({})
     },
     n: {
       type: String

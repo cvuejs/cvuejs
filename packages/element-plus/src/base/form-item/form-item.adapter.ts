@@ -1,3 +1,4 @@
+import { UploadAdapter } from './../upload/upload.adapter'
 import { CheckboxGroupAdapter } from './../checkbox-group/checkbox-group.adapter'
 import { CheckboxAdapter } from './../checkbox/checkbox.adapter'
 import { TimePickerAdapter } from './../time-picker/time-picker.adapter'
@@ -19,24 +20,35 @@ export type FormItemType =
   | 'checkbox-group'
   | 'radio'
   | 'radio-group'
+  | 'upload'
+  | 'div'
+  | 'slot'
 export const FormItemBindsOmitKeys: (keyof FormItemAdapter)[] = [
   'visible',
   'width',
   'type',
   'prop',
   'rules',
+  'tip',
+  'className',
   'formControlClassName',
 
-  'inputConfig',
-  'selectConfig',
-  'datePickerConfig',
-  'timePickerConfig',
-  'checkboxConfig',
-  'checkboxGroupConfig',
-  'radioConfig',
-  'radioGroupConfig'
+  'input',
+  'select',
+  'datePicker',
+  'timePicker',
+  'checkbox',
+  'checkboxGroup',
+  'radio',
+  'radioGroup',
+  'upload',
+  'slot'
 ]
-export type FormItemAlign = 'left' | 'mid' | 'right'
+export interface FormItemSlotConfig {
+  name?: string
+  scope?: Record<string, any>
+}
+export type FormItemAlign = 'left' | 'center' | 'right'
 export interface FormItemAdapter
   extends Partial<
     FormItemProps &
@@ -51,7 +63,7 @@ export interface FormItemAdapter
   /** form-item的宽度 */
   width?: string
 
-  rules?: string
+  rules?: string | Record<string, any>
 
   /** formItem的类型 */
   type?: FormItemType
@@ -59,20 +71,31 @@ export interface FormItemAdapter
   /** 表单控件对应的models中的key的名称 */
   prop?: string
 
+  tip?: string
+
+  validateFieldName?: string
+
+  className?: string
+
   formControlClassName?: string
 
-  inputConfig?: InputAdapter
-  selectConfig?: SelectAdapter
-  datePickerConfig?: DatePickerAdapter
-  timePickerConfig?: TimePickerAdapter
-  checkboxConfig?: CheckboxAdapter
-  checkboxGroupConfig?: CheckboxGroupAdapter
-  radioConfig?: RadioAdapter
-  radioGroupConfig?: RadioGroupAdapter
+  input?: InputAdapter
+  select?: SelectAdapter
+  datePicker?: DatePickerAdapter
+  timePicker?: TimePickerAdapter
+  checkbox?: CheckboxAdapter
+  checkboxGroup?: CheckboxGroupAdapter
+  radio?: RadioAdapter
+  radioGroup?: RadioGroupAdapter
+  upload?: UploadAdapter
+  slot?: FormItemSlotConfig
 }
 
 export interface FormItemOutput {}
 
 export const FORM_ITEM_DEFAULT: FormItemAdapter = {
-  type: 'input'
+  type: 'input',
+  slot: {
+    name: 'formItemSlot'
+  }
 }

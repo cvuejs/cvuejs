@@ -20,6 +20,7 @@ export interface CliConfigItem {
   type?: CliConfigItemType // 默认custom
   root?: string
   router?: string
+  ignoreRouteInject?: boolean
   /** GenerateItem未配置templatePath时的默认templatePath */
   templatePath?: string
   /** GenerateItem未配置handlerPath时的默认handlerPath */

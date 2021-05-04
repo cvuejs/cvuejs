@@ -1,15 +1,12 @@
-import { Send, HTTP_METHODS } from '@/core/http';
-
+import { HttpSend } from '@cvue/http'
 
 class Api {
-  // 列表接口
   list(params?: any) {
-    return Send({
+    return HttpSend({
       url: '/admin/list',
       params,
-      method: HTTP_METHODS.GET,
-      errorText: '获取数据失败'
-    });
+      method: 'GET'
+    })
   }
 }
 

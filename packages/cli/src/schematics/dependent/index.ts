@@ -16,7 +16,6 @@ import { readIntoSourceFile } from '../../utils/file'
 import * as ts from 'typescript'
 import {
   findNodes,
-  getObjectField,
   insertImport,
   isImported
 } from '../../utils/ast-utils'
@@ -37,8 +36,8 @@ interface DependentConfig extends CliConfigItem {
  */
 function injectComponentToHost(options: DependentConfig): Rule {
   return (host: Tree) => {
-    const classifyName = `Bs${strings.classify(options.name)}`
-    const dasherizeName = `bs-${strings.dasherize(options.name)}`
+    const classifyName = `${strings.classify(options.name)}`
+    // const dasherizeName = `${strings.dasherize(options.name)}`
 
     const hostFilePath = options.isInnerComponent
       ? join(options.hostPath, `${strings.dasherize(options.hostName)}.vue`)
@@ -46,7 +45,7 @@ function injectComponentToHost(options: DependentConfig): Rule {
           options.hostPath,
           'src',
           `${strings.dasherize(options.hostName)}.vue`
-        )
+      )
     const hostSource = readIntoSourceFile(host, hostFilePath)
 
     const hostRecorder = host.beginUpdate(hostFilePath)
@@ -56,9 +55,7 @@ function injectComponentToHost(options: DependentConfig): Rule {
       isImported(
         hostSource,
         classifyName,
-        `./components/${strings.dasherize(options.name)}/${strings.dasherize(
-          options.name
-        )}.vue`
+        `./components/${strings.dasherize(options.name)}/${strings.dasherize(options.name)}.vue`
       )
     )
       return host
@@ -66,9 +63,7 @@ function injectComponentToHost(options: DependentConfig): Rule {
       hostSource,
       hostFilePath,
       classifyName,
-      `./components/${strings.dasherize(options.name)}/${strings.dasherize(
-        options.name
-      )}.vue`,
+      `./components/${strings.dasherize(options.name)}/${strings.dasherize(options.name)}.vue`,
       true
     )
     if (change instanceof InsertChange) {
@@ -76,55 +71,40 @@ function injectComponentToHost(options: DependentConfig): Rule {
     }
 
     // 注入 compoent引用
-    const componentCallExpressionNodes = findNodes(
+    const exportAssignment = findNodes(
       hostSource,
-      ts.SyntaxKind.ClassDeclaration
+      ts.SyntaxKind.ExportAssignment
     )
-      .filter((node) => (node as ts.ClassDeclaration).decorators)
-      .map((node) => (node as ts.ClassDeclaration).decorators![0].expression)
-      .filter((node) => {
-        return (
-          ((node as ts.CallExpression).expression as ts.Identifier)
-            .escapedText === 'Component'
-        )
-      })
-    if (!componentCallExpressionNodes.length) return host
+    const objectLiteralExpression = findNodes(
+      exportAssignment[0],
+      ts.SyntaxKind.ObjectLiteralExpression
+    )[0]
+    if (!objectLiteralExpression) return host
+    const componentsIdentifier = findNodes(
+      objectLiteralExpression,
+      ts.SyntaxKind.Identifier
+    ).find((i) => i.getText() === 'components')
     let insertCode = ''
     let pos = 0
-    const callExpressionArgs = (componentCallExpressionNodes[0] as ts.CallExpression)
-      .arguments
-    if (!callExpressionArgs.length) {
-      // @Component()
-      insertCode = `{
-  components: {
-    ${classifyName} // <${dasherizeName}>
-  }
-}`
-      pos = componentCallExpressionNodes[0].end - 1
-    } else if (
-      !getObjectField(
-        callExpressionArgs[0] as ts.ObjectLiteralExpression,
-        'components'
-      ).length
-    ) {
+    if (!componentsIdentifier) {
       // @Component({}) 或者 @Component({ ...其它不包含components属性 })
       insertCode = `
   components: {
-    ${classifyName} // <${dasherizeName}>
-  }
+    ${classifyName}
+  },
 `
-      pos = callExpressionArgs[0].pos + 1
+      pos = objectLiteralExpression.pos + 1
     } else {
-      const componentProperty = (callExpressionArgs[0] as ts.ObjectLiteralExpression).properties.find(
+      const componentProperty = (objectLiteralExpression as ts.ObjectLiteralExpression).properties.find(
         (node) => node.name && node.name.getText() === 'components'
       ) as ts.PropertyAssignment
       const hasOtherComponents = !!(componentProperty!
         .initializer as ts.ObjectLiteralExpression).properties.length
       insertCode = hasOtherComponents
         ? `
-    ${classifyName}, // <${dasherizeName}>`
+    ${classifyName},`
         : `
-    ${classifyName} // <${dasherizeName}>
+    ${classifyName}
   `
       pos = componentProperty!.initializer.pos + 2
     }
@@ -143,7 +123,7 @@ export function dependentComponent(options: DependentConfig): Rule {
 
     const hostPathArr = options.hostPath.split('/')
     const hostName = strings.dasherize(hostPathArr[hostPathArr.length - 1])
-    const isInnerComponent = options.hostPath.includes('components')
+    const isInnerComponent = /.+src\/components/.test(options.hostPath)
     options.hostName = hostName
     options.isInnerComponent = isInnerComponent
 

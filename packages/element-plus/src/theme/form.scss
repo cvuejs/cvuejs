@@ -1,0 +1,10 @@
+@import 'mixins/mixins';
+
+@include b(form) {
+  width: 100%;
+  @include e(container) {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+  }
+}

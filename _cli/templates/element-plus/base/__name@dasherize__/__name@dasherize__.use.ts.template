@@ -1,0 +1,14 @@
+import { <%= classify(name) %>Adapter, <%= classify(name) %>Output } from './<%= dasherize(name) %>.adapter'
+import { computed, ComputedRef, reactive } from 'vue'
+
+interface Use<%= classify(name) %>Opt {
+  attrs: ComputedRef<<%= classify(name) %>Adapter>
+}
+interface <%= classify(name) %>State {}
+
+export const use<%= classify(name) %> = ({ attrs }: Use<%= classify(name) %>Opt) => {
+  const state = reactive<<%= classify(name) %>State>({})
+
+  const output = computed<<%= classify(name) %>Output>(() => ({}))
+  return { output, state }
+}

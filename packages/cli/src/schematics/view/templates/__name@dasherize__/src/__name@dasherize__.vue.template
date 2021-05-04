@@ -5,13 +5,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator';
-import { The<%= classify(name) %>Config } from './The<%= classify(name) %>.config';
+import { defineComponent } from 'vue'
 
-@Component({})
-export default class The<%= classify(name) %> extends Mixins(The<%= classify(name) %>Config) {
-
-}
+export default defineComponent({
+  setup() {}
+})
 </script>
 
 <style lang="scss">

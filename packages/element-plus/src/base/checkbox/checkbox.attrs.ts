@@ -20,6 +20,7 @@ export interface CheckboxProps {
 export interface CheckboxEvents {
   onChange(
     value: boolean | number | string,
+    event: Event,
     componentData: ComponentCallbackInjectParam<CheckboxAdapter, CheckboxOutput>
   ): unknown
 }

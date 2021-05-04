@@ -15,11 +15,12 @@
         :attrs="attrs"
       ></slot>
 
-      <template v-else>
+      <template v-if="attrs.columns">
         <TableColumn
           v-for="(column, index) in attrs.columns || []"
           :key="index"
           :c="column"
+          @prop-handle="onPropHandle"
         >
           <template v-for="(_, slot) in $slots" #[slot]="scope">
             <slot :name="slot" v-bind="scope"></slot>
@@ -79,14 +80,14 @@ export default defineComponent({
     })
 
     /** 组件输出 */
-    const { output } = useTable({ attrs, state })
+    const { output, onPropHandle } = useTable({ attrs, state })
 
     /** 注册、注销组件 */
     useProvider({ attrs, output, type, ctx })
 
     /** 组件通用setup */
     const { computedSlotName } = useCommonSetup({ attrs, output })
-    return { attrs, binds, computedSlotName, ...toRefs(state) }
+    return { attrs, binds, computedSlotName, onPropHandle, ...toRefs(state) }
   }
 })
 </script>

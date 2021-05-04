@@ -12,7 +12,7 @@
         :name="computedSlotName('footer')"
         :attrs="attrs"
       ></slot>
-      <ButtonGroup v-else :c="attrs.footerButtonGroup"></ButtonGroup>
+      <ButtonGroup v-else :c="footerButtonGroup"></ButtonGroup>
     </template>
   </el-dialog>
 </template>
@@ -36,6 +36,7 @@ export default defineComponent({
   name: COMPONENT_NAME.dialog,
   inheritAttrs: false,
   components: { ElDialog, ButtonGroup },
+  emits: ['output-change'],
   props: {
     c: {
       type: Object as PropType<DialogAdapter>,
@@ -57,7 +58,7 @@ export default defineComponent({
     })
 
     /** 组件输出 */
-    const { output, preload } = useDialog({ attrs })
+    const { output, preload, footerButtonGroup } = useDialog({ attrs })
 
     /** 注册、注销组件 */
     useProvider({ attrs, output, type, ctx })
@@ -65,7 +66,7 @@ export default defineComponent({
     /** 组件通用setup */
     const { computedSlotName } = useCommonSetup({ attrs, output, preload })
 
-    return { attrs, binds, computedSlotName }
+    return { attrs, binds, computedSlotName, footerButtonGroup }
   }
 })
 </script>

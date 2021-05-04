@@ -17,7 +17,7 @@ interface Sort {
 
 export interface TableProps {
   data: any[]
-  size: string
+  size: 'medium' | 'small' | 'mini'
   width: string | number
   height: string | number
   maxHeight: string | number
@@ -71,63 +71,63 @@ export interface TableEvents {
     componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
   ): unknown
   onCellMouseEnter(
-    row: Record<string, any>[],
-    column: Record<string, any>[],
+    row: Record<string, any>,
+    column: Record<string, any>,
     cell: HTMLTableCellElement,
     event: MouseEvent,
     componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
   ): unknown
   onCellMouseLeave(
-    row: Record<string, any>[],
-    column: Record<string, any>[],
+    row: Record<string, any>,
+    column: Record<string, any>,
     cell: HTMLTableCellElement,
     event: MouseEvent,
     componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
   ): unknown
   onCellClick(
-    row: Record<string, any>[],
-    column: Record<string, any>[],
+    row: Record<string, any>,
+    column: Record<string, any>,
     cell: HTMLTableCellElement,
     event: MouseEvent,
     componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
   ): unknown
   onCellDbclick(
-    row: Record<string, any>[],
-    column: Record<string, any>[],
+    row: Record<string, any>,
+    column: Record<string, any>,
     cell: HTMLTableCellElement,
     event: MouseEvent,
     componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
   ): unknown
   onRowClick(
-    row: Record<string, any>[],
-    column: Record<string, any>[],
+    row: Record<string, any>,
+    column: Record<string, any>,
     event: MouseEvent,
     componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
   ): unknown
   onRowDbclick(
-    row: Record<string, any>[],
-    column: Record<string, any>[],
+    row: Record<string, any>,
+    column: Record<string, any>,
     event: MouseEvent,
     componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
   ): unknown
   onRowContextmenu(
-    row: Record<string, any>[],
-    column: Record<string, any>[],
+    row: Record<string, any>,
+    column: Record<string, any>,
     event: MouseEvent,
     componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
   ): unknown
   onHeaderClick(
-    column: Record<string, any>[],
+    column: Record<string, any>,
     event: MouseEvent,
     componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
   ): unknown
   onHeaderContextmenu(
-    column: Record<string, any>[],
+    column: Record<string, any>,
     event: MouseEvent,
     componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
   ): unknown
   onSortChange(
-    sortData: { column: Record<string, any>[] } & Required<Sort>,
+    sortData: { column: Record<string, any> } & Required<Sort>,
     componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
   ): unknown
   onFilterChange(
@@ -135,19 +135,19 @@ export interface TableEvents {
     componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
   ): unknown
   onCurrentChange(
-    currentRow: Record<string, any>[],
-    oldCurrentRow: Record<string, any>[],
+    currentRow: Record<string, any>,
+    oldCurrentRow: Record<string, any>,
     componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
   ): unknown
   onHeaderDragend(
     newWidth: number,
     oldWidth: number,
-    column: Record<string, any>[],
+    column: Record<string, any>,
     event: MouseEvent,
     componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
   ): unknown
   onExpandChange(
-    row: Record<string, any>[],
+    row: Record<string, any>,
     expanded: any,
     componentData: ComponentCallbackInjectParam<TableAdapter, TableOutput>
   ): unknown

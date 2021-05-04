@@ -1,3 +1,3 @@
-import The<%= classify(name) %> from './src/The<%= classify(name) %>.vue';
+import <%= classify(name) %> from './src/<%= dasherize(name) %>.vue';
 
-export default The<%= classify(name) %>;
+export default <%= classify(name) %>;

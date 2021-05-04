@@ -4,7 +4,16 @@
     :ref="$options.name"
     v-bind="binds"
     v-model="attrs.modelValue"
-  ></el-checkbox>
+  >
+    <template #default>
+      <slot
+        v-if="computedSlotName('default')"
+        :name="computedSlotName('default')"
+        :attrs="attrs"
+      ></slot>
+      <template v-else>{{ attrs.text || attrs.label || '' }}</template>
+    </template>
+  </el-checkbox>
 </template>
 
 <script lang="ts">
@@ -35,7 +44,7 @@ export default defineComponent({
       type: String
     },
     modelValue: {
-      type: [String, Number] as PropType<string | number>,
+      type: [String, Number, Boolean] as PropType<string | number | boolean>,
       default: ''
     }
   },

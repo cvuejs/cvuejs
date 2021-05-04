@@ -1,0 +1,13 @@
+@import 'mixins/mixins';
+
+@include b(button-group) {
+  @include when(left) {
+    text-align: left;
+  }
+	@include when(mid) {
+    text-align: center;
+  }
+	@include when(right) {
+    text-align: right;
+  }
+}

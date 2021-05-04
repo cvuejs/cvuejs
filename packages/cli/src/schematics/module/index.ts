@@ -7,7 +7,9 @@ import {
   mergeWith,
   MergeStrategy,
   apply,
-  Tree
+  Tree,
+  filter,
+  noop
 } from '@angular-devkit/schematics'
 import { normalize, join, relative } from 'path'
 import { strings } from '@angular-devkit/core'
@@ -26,6 +28,7 @@ import { DEFAULT_VIEW_CONFIG } from '../../config'
 interface ModuleConfig extends CliConfigItem {
   name: string
   modulePath: string
+  ignoreRouteInject: boolean
 }
 
 function setViewRouter(options: Required<ModuleConfig>): Rule {
@@ -35,12 +38,18 @@ function setViewRouter(options: Required<ModuleConfig>): Rule {
     const routerPath = options.modulePath
       ? join(options.root, options.modulePath, '/index.route.ts')
       : join(options.router)
+    const routerDir = options.router
+      .split('/')
+      .filter((n, i, arr) => {
+        return i !== arr.length - 1
+      })
+      .join('/')
     const routerSource = readIntoSourceFile(host, routerPath)
     const viewRouteName = `${classifyName}Routes`
     const viewRoutePath = options.modulePath
       ? join('./', options.modulePath, '/index.route')
       : join(
-          relative(options.router, options.root),
+          relative(routerDir, options.root),
           options.name,
           '/index.route'
         )
@@ -57,7 +66,7 @@ function setViewRouter(options: Required<ModuleConfig>): Rule {
     }
 
     // 默认最后一个带有routes属性的对象为Router对象
-    const arrayNodes = findNodes(routerSource, ts.SyntaxKind.PropertyAssignment)
+    const arrayNodes = findNodes(routerSource, ts.SyntaxKind.VariableDeclaration)
       .reverse()
       .filter((node: ts.Node) => {
         return node.getChildren().some((node) => node.getText() === 'routes')
@@ -96,11 +105,14 @@ export function module(options: Required<ModuleConfig>): Rule {
 
     const movePath = normalize(options.root)
     const templateSource = apply(url('./templates'), [
+      options.ignoreRouteInject
+        ? filter((path) => !path.endsWith('index.route.ts.template'))
+        : noop(),
       applyTemplates({ ...strings, ...options }),
       move(movePath)
     ])
     return chain([
-      setViewRouter(options),
+      !options.ignoreRouteInject ? setViewRouter(options) : noop(),
       mergeWith(templateSource, MergeStrategy.Overwrite)
     ])
   }

@@ -8,7 +8,8 @@ import {
 
 export const ButtonGroupBindsOmitKeys: (keyof ButtonGroupAdapter)[] = [
   'buttons',
-  'isGroup'
+  'isGroup',
+  'align'
 ]
 export interface ButtonGroupAdapter
   extends Partial<
@@ -21,10 +22,13 @@ export interface ButtonGroupAdapter
 
   /** 按钮间是否有间隙，值true时无间隙 */
   isGroup?: boolean
+
+  align?: 'left' | 'center' | 'right'
 }
 
 export interface ButtonGroupOutput {}
 
 export const BUTTON_GROUP_DEFAULT: ButtonGroupAdapter = {
-  isGroup: false
+  isGroup: false,
+  align: 'left'
 }

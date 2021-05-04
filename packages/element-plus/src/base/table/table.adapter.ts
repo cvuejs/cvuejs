@@ -29,6 +29,11 @@ export interface TableOutput {
       | Record<string, any>
       | ((params?: Record<string, any>) => Record<string, any>)
   ): unknown
+  setExtraParams(
+    params:
+      | Record<string, any>
+      | ((params?: Record<string, any>) => Record<string, any>)
+  ): unknown
   update(): unknown
 }
 

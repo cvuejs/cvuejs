@@ -1,0 +1,10 @@
+在组件因为一些原因延迟渲染时，output可能未emit出来就被调用了
+
+emit 存在name时输入麻烦 （emit(['type', 'name'])）
+
+
+hooks cli配置  -自动注入index.ts中，child中module字段
+
+upload组件slotAlias tip无效
+
+数据转换： 表单、表格、接口

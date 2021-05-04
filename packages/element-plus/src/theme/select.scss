@@ -1,0 +1,5 @@
+@import 'mixins/mixins';
+
+@include b(select) {
+  width: 100%;
+}

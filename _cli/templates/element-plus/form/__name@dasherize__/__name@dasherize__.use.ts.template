@@ -1,0 +1,18 @@
+import { <%= classify(name) %>Adapter, <%= classify(name) %>Output } from './<%= dasherize(name) %>.adapter'
+import { computed, ComputedRef, SetupContext, reactive } from 'vue'
+import { useModelValue } from '../../utils/hooks/useModelValue'
+
+interface Use<%= classify(name) %>Opt {
+  props: Record<string, any>
+  attrs: ComputedRef<<%= classify(name) %>Adapter>
+  ctx: SetupContext<any>
+}
+interface <%= classify(name) %>State {}
+
+export const use<%= classify(name) %> = ({ props, attrs, ctx }: Use<%= classify(name) %>Opt) => {
+  const state = reactive<<%= classify(name) %>State>({})
+
+  useModelValue({ props, attrs, ctx })
+  const output = computed<<%= classify(name) %>Output>(() => ({}))
+  return { output, state }
+}

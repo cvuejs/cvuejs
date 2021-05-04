@@ -1,3 +1,4 @@
+import { ButtonAdapter } from './../button/button.adapter'
 import { ElCommonAdapter } from '../../utils/dtos'
 import { ButtonGroupAdapter } from '../button-group/button-group.adapter'
 import {
@@ -8,7 +9,9 @@ import {
 
 export const TableColumnBindsOmitKeys: (keyof TableColumnAdapter)[] = [
   'buttonGroupRender',
-  'nestedColumns'
+  'buttonDefault',
+  'nestedColumns',
+  'propHandle'
 ]
 export interface TableColumnAdapter
   extends Partial<
@@ -20,10 +23,15 @@ export interface TableColumnAdapter
   buttonGroupRender?(scope: {
     row: Record<string, any>
     column: Record<string, any>
+    $index: number
   }): ButtonGroupAdapter
+  buttonDefault?: ButtonAdapter
 
   /** type nesetd时有效，多层嵌套，用于多级表头 */
   nestedColumns?: TableColumnAdapter[]
+
+  /** 处理当前prop数据 */
+  propHandle?(row: Record<string, any>): unknown
 }
 
 export interface TableColumnOutput {}

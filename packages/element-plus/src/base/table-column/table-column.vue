@@ -64,6 +64,7 @@ export default defineComponent({
   name: COMPONENT_NAME.tableColumn,
   inheritAttrs: false,
   components: { ElTableColumn, ButtonGroup },
+  emits: ['prop-handle'],
   props: {
     c: {
       type: Object as PropType<TableColumnAdapter>,
@@ -85,7 +86,7 @@ export default defineComponent({
     })
 
     /** 组件输出 */
-    const { output, getButtonGroup } = useTableColumn({ attrs })
+    const { output, getButtonGroup } = useTableColumn({ attrs, ctx })
 
     /** 注册、注销组件 */
     useProvider({ attrs, output, type, ctx })

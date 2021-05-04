@@ -1,1 +1,1 @@
-export { HttpSend, HttpPreSend, HttpConfig } from './src/http.service'
+export { HttpSend, HttpConfig } from './src/http.service'

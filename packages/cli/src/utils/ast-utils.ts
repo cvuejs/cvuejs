@@ -87,10 +87,10 @@ export function insertImport(
   const open = isDefault ? '' : '{ '
   const close = isDefault ? '' : ' }'
   const insertAtBeginning = allImports.length === 0 && useStrict.length === 0
-  const separator = insertAtBeginning ? '' : ';\n'
+  const separator = insertAtBeginning ? '' : '\n'
   const toInsert =
     `${separator}import ${open}${symbolName}${close}` +
-    ` from '${fileName}'${insertAtBeginning ? ';\n' : ''}`
+    ` from '${fileName}'${insertAtBeginning ? '\n' : ''}`
   return insertAfterLastOccurrence(
     allImports,
     toInsert,
@@ -136,7 +136,7 @@ export function insertAfterLastOccurrence(
     )
   }
   const lastItemPosition: number = lastItem
-    ? lastItem.getEnd() - 1
+    ? lastItem.getEnd()
     : fallbackPos
 
   return new InsertChange(file, lastItemPosition, toInsert)
