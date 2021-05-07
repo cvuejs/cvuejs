@@ -104,7 +104,7 @@ export const useCt = ({ attrs, state }: UseCtOpt) => {
       }))
   }
 
-  function getTableNo(index: number = 0) {
+  function getTableNo(index = 0) {
     const { currentPage = 1, pageSize = 10 } = attrs.value.pagination
     return index + 1 + (currentPage - 1) * pageSize
   }

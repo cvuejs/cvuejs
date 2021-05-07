@@ -5,8 +5,7 @@ interface UseRadioButtonOpt {
   attrs: ComputedRef<RadioButtonAdapter>
 }
 
-export const useRadioButton = ({ attrs }: UseRadioButtonOpt) => {
-
+export const useRadioButton = ({}: UseRadioButtonOpt) => {
   const output = computed(() => ({}))
   return { output }
 }

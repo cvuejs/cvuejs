@@ -1,4 +1,4 @@
-import { ComputedRef, ref, SetupContext, watch, watchEffect } from 'vue'
+import { ComputedRef, SetupContext, watch } from 'vue'
 
 interface UseModelValueOpt {
   props: Record<string, any>

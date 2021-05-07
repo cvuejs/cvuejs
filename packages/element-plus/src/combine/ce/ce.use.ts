@@ -5,13 +5,7 @@ import {
 } from './../../base/dialog/dialog.adapter'
 import { FormOutput } from './../../base/form/form.adapter'
 import { CeAdapter, CeOutput } from './ce.adapter'
-import {
-  computed,
-  ComputedRef,
-  getCurrentInstance,
-  nextTick,
-  reactive
-} from 'vue'
+import { computed, ComputedRef, nextTick, reactive } from 'vue'
 import { useOutputChange } from '../../utils/hooks/useOutputChange'
 import { emit } from '../../utils/service/provider.service'
 
@@ -26,8 +20,6 @@ export interface CeState {
 }
 
 export const useCe = ({ attrs }: UseCeOpt) => {
-  const instance = getCurrentInstance()!
-
   const state = reactive<CeState>({
     dialogOutput: {},
     formOutput: {},
@@ -96,7 +88,7 @@ export const useCe = ({ attrs }: UseCeOpt) => {
   function dialogOpen(preload?: any) {
     if (attrs.value.form && _.isPlainObject(preload)) {
       /** 防止form models初始化有值 */
-      nextTick(() => attrs.value.form!.models = preload)
+      nextTick(() => (attrs.value.form!.models = preload))
     }
     state.dialogOutput.open && state.dialogOutput.open(preload)
   }

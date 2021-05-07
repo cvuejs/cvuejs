@@ -4,7 +4,7 @@
 </template>
 
 <script lang="ts">
-import { ButtonAdapter } from '@cvue/element-plus/src/base/button/adapter'
+import { ButtonAdapter } from '@cvue/element-plus/src/base/button/button.adapter'
 import { defineComponent } from 'vue'
 
 export default defineComponent({

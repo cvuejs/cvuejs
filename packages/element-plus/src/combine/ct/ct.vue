@@ -35,11 +35,11 @@ import { useProvider } from '../../utils/hooks/useProvider'
 import { useCommonSetup } from '../../utils/hooks/useCommonSetup'
 import { useComputeAttrs } from '../../utils/hooks/useComputeAttrs'
 import { CtState, useCt } from './ct.use'
-import { Pagination, Table, TableColumn } from '../../base'
+import { Pagination, Table } from '../../base'
 
 export default defineComponent({
   name: COMPONENT_NAME.ct,
-  components: { Table, TableColumn, Pagination },
+  components: { Table, Pagination },
   props: {
     c: {
       type: Object as PropType<CtAdapter>,

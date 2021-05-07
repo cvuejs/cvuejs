@@ -4,7 +4,6 @@ import {
   ComputedRef,
   getCurrentInstance,
   SetupContext,
-  watch,
   watchEffect
 } from 'vue'
 import { useAsyncData } from '../../utils/hooks/useAsyncData'
@@ -23,13 +22,12 @@ export interface SelectState {
   loading: boolean
 }
 
-export const useSelect = ({ props, attrs, state, ctx }: UseSelectOpt) => {
+export const useSelect = ({ props, attrs, ctx }: UseSelectOpt) => {
   const instance = getCurrentInstance()
   const { data, send } = useAsyncData(attrs.value.asyncOptions)
 
-  watchEffect(
-    () => {
-      if (attrs.value.asyncOptions) {
+  watchEffect(() => {
+    if (attrs.value.asyncOptions) {
       if (data.value) {
         switch (attrs.value.type) {
           case 'option':
@@ -43,9 +41,8 @@ export const useSelect = ({ props, attrs, state, ctx }: UseSelectOpt) => {
         }
       }
       attrs.value.loading = !!attrs.value.asyncOptions.loading
-      }
     }
-  )
+  })
 
   if (attrs.value.asyncOptions) {
     const { onVisibleChange, onModelChange } = attrs.value
@@ -72,7 +69,7 @@ export const useSelect = ({ props, attrs, state, ctx }: UseSelectOpt) => {
       }
     }
   }
-  
+
   /** 需要放在改写onModelChange之后 */
   useModelValue({ props, attrs, ctx })
 

@@ -1,7 +1,7 @@
 import { OptionGroupAdapter } from './../option-group/option-group.adapter'
 import { OptionAdapter } from './../option/option.adapter'
 import { AsyncDataAdapter } from './../../utils/hooks/useAsyncData'
-import { ElCommonAdapter, ElFormCtrlCommonAdapter } from '../../utils/dtos'
+import { ElFormCtrlCommonAdapter } from '../../utils/dtos'
 import { SelectEvents, SelectProps, SelectSlots } from './select.attrs'
 
 export type SelectType = 'option' | 'optionGroup'

@@ -17,10 +17,12 @@ module.exports = {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-use-before-define': 'off',
+    'no-empty-pattern': 'off',
     '@typescript-eslint/no-use-before-define': ['error', { functions: false }],
     '@typescript-eslint/no-explicit-any': 'off',
     'prettier/prettier': 'off',
-    '@typescript-eslint/no-non-null-assertion': 'off'
+    '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/no-empty-interface': 'off'
   },
   overrides: [
     {

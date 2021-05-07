@@ -5,8 +5,7 @@ interface UseOptionOpt {
   attrs: ComputedRef<OptionAdapter>
 }
 
-export const useOption = ({ attrs }: UseOptionOpt) => {
-
+export const useOption = ({}: UseOptionOpt) => {
   const output = computed(() => ({}))
   return { output }
 }

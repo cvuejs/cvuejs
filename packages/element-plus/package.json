@@ -14,13 +14,16 @@
   "license": "MIT",
   "dependencies": {
     "@cvue/http": "PEER-0.0.0-PLACEHOLDER",
-    "vue": "^3.0.0",
-    "lodash": "^4.17.19"
+    "@vee-validate/i18n": "^4.1.20",
+    "@vee-validate/rules": "^4.1.20",
+    "lodash": "^4.17.19",
+    "vee-validate": "^4.2.4",
+    "element-plus": "^1.0.2",
+    "vue": "^3.0.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.149",
     "@types/qs": "^6.9.0",
-    "element-plus": "^1.0.2",
     "typescript": "^4.2.2"
   }
 }

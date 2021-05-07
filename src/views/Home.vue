@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
-import { ButtonAdapter } from '@cvue/element-plus/src/base/button/adapter'
+import { ButtonAdapter } from '@cvue/element-plus/src/base/button/button.adapter'
 import { HttpSend } from '@cvue/http'
 import { defineComponent, ref } from 'vue'
 
